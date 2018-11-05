@@ -5,7 +5,7 @@ This is remotely similar to using a &lt;datalist&gt; but far more flexible and p
   
 Pop-up menus may have (virtually) any HTML content, and even may have additional user controls to display various developer-defined options.
 
-http://SoftMoon-WebWare.com/input_type=picker_instructions.htm
+http://SoftMoon-WebWare.com/input-type=picker_instructions.htm
 
 This Class is the backbone of the MasterColorPicker project.  That project makes a great demo of this one:
 
