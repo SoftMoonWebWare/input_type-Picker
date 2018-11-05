@@ -1,7 +1,7 @@
 # input_type-Picker
-JavaScript Class allowing end-users to pick/choose items from highly complex pop-up menus when using <input> tags
+JavaScript Class allowing end-users to pick/choose items from highly complex pop-up menus when using &lt;input&gt; tags
 
-This is remotely similar to using a <datalist> but far more flexible and powerful.
+This is remotely similar to using a &lt;datalist&gt; but far more flexible and powerful.
   
 Pop-up menus may have (virtually) any HTML content, and even may have additional user controls to display various developer-defined options.
 
