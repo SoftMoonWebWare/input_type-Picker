@@ -1,0 +1,881 @@
+﻿<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="UTF-8">
+<meta name='description' content='SoftMoon-WebWare’s JavaScript™ powered input type="picker" HTML extension.'>
+<meta name='author' content='Joe Golembieski, SoftMoon-WebWare'>
+<meta name='copyright' content='Copyright © 2010, 2012, 2013, 2014, 2015, 2022 Joe Golembieski, SoftMoon-WebWare'>
+<title>&lt;input type="picker"&gt; from SoftMoon-WebWare</title>
+<link rel="icon" type="image/x-icon" href="images/SoftMoonWebWare.gif">
+<script>const SoftMoon={};  Object.defineProperty(SoftMoon, 'WebWare', {value: {}, enumerable: true});</script>
+<script type='text/javascript' src='JS_toolbucket/+++JS/+++.js'></script>
+<script type='text/javascript' src='JS_toolbucket/SoftMoon-WebWare/UniDOM-2022.js'></script>
+<script type='text/javascript' src='JS_toolbucket/SoftMoon-WebWare/Picker.js'></script>
+<style type="text/css">
+body, header, main, section, footer, figure, div, h1, h2, h4, h5, img, ul, ol, dl, menu, li {
+	margin: 0;
+	padding: 0; }
+body {
+	min-width: 62.618em;
+	font-family: serif;
+	color: #000000;
+	background-color: #FFDEAD;
+	background-image:  /* SteelBlue */
+		linear-gradient(to right, #4682B4FF, 304px, #4682B400 800px),
+		linear-gradient(to bottom, #4682B4FF, 266px, #4682B400 700px),
+		linear-gradient(to top, #4682B4FF, 38px, #4682B400 100px);
+	}
+
+header h1 {
+	font-size: 1.618em;
+	font-weight: bold;
+	clear: both;
+	text-align: center;  }
+header h1:first-child {
+	font-family: sans-serif;
+	padding: .618em 1em 0 1em;
+	text-align: left; }
+header h1 span {
+	padding: 0 0 0 2.618em;
+	font-size: .764em }  /* ≈ Φ + ((1-Φ) - (1-Φ)*Φ) */
+
+header figure {
+	margin-left: .382rem;
+	float: left; }
+#logo {
+	opacity: .78;
+	font-size: 1.618em; /*for alt text*/
+	font-weight: bold;
+	line-height: 150%; }
+header figcaption {
+	font-size: 1.382em;
+	font-weight: bold;
+	text-align: center;
+	width: 27em; }
+header h1 span,
+header figcaption span {
+	display: block;
+	font-style: oblique; }
+
+header menu {
+	display: block;
+	z-index: 618;
+	color: #FF0000;
+	text-align: left;
+	list-style-type: none; }
+header > menu {
+	float: right;
+	padding: 1.618em 0 0 0;
+	font-size: 1.382em;
+	list-style-type: none;
+	overflow: visible; }
+header menu a {
+	padding: 0 .382em;
+	color: #000080;
+	white-space: nowrap; }
+header menu a:visited {
+	color: #000080; }
+header menu a:hover {
+	color: #FFFF00;
+	background-color: #000080;
+	text-decoration: none;
+	border-radius: .618em / .382em; }
+header menu menu {
+	padding: 0;
+	margin-left: 1.618em; }
+header li.current {
+	font-weight: bold;
+	font-style: oblique;
+	position: relative;
+	right: 3.618em; }
+
+main {
+	text-align: center; }
+main > p {
+	text-align: justify;
+	text-indent: -.618em;
+	font-size: 1.236em;
+	width: 27em;
+	margin: 0 auto 0 auto;
+	padding: 0 1em 1em 1em; }
+main > p * {
+	text-indent: 0; }
+main > p:first-letter {
+	font-size: 1.618em;
+	font-weight: bold;
+	color: #000040; }
+
+main aside.note {
+	position: relative;
+	float: right;
+	top: -4.1618em;
+	width: 13.618em;
+	height: 7.618em;
+	overflow: hidden;
+	margin: 0;
+	padding: 0 1em 0 0;
+	text-align: left; }
+main aside:hover {
+	height: auto; }
+main aside p {
+	font-size: .854076em;
+	margin: 0;
+	z-index: 2; }
+main aside ul {
+	margin: .618em 0 0 0;
+	padding: 0 0 0 1em;
+	font-size: .854076em; }
+main aside > span {
+	position: absolute;
+	top: 4.618em;
+	right: -2.38em;
+	cursor: default;
+	font-weight: bold;
+	color: red;
+	transform: rotate(90deg);
+	-webkit-transform: rotate(90deg);
+	-ms-transform: rotate(90deg);
+	-moz-transform: rotate(90deg); }
+main aside.assertion {
+	position: relative;
+	float: left;
+	top: -4.1618em;
+	width: 12.618em;
+	margin-left: .618em;
+	text-align: right; }
+
+main samp, code {
+	white-space: nowrap;
+	text-align: left;
+	font-size: .854076em;
+	font-family: "Consolas"; }
+main .example {
+	width: 37em;
+	font-size: 1.236em;
+	text-align: left;
+	margin: 0 auto 0 auto; }
+p code {
+  display: inline-block; }
+main > code, main > samp {
+	display: block;
+	white-space: pre;
+	background-color: white;
+	width: auto; }
+.filename {
+  color: #0066FF;
+	white-space: nowrap; }
+label {
+	display: inline-block;
+	position: relative;
+	margin-bottom: 4em; }
+label .pickerPanel {
+  position: absolute;
+	top: 1.618em;
+	right: -10.618em; }
+.pickerPanel,
+#songs .picker {display: none;}
+.activePicker,
+#songs .activePicker {display: table;}
+#songs {
+	padding: 2em 0 .618em 0;
+	margin: .618em 12.618em;
+	position: relative; }
+#songPickerControls.activePicker {
+	position: absolute;
+	top: 1.1618em;
+	left: 0;
+	display: block;
+	width: 100%;
+	text-align: center;
+	background-color: yellow; }
+#songs label {
+	margin: 0 .618em; }
+#songPickerHTML {
+	background-color: yellow;
+	border: 2px solid blue; }
+#songPickerHTML td {
+	padding: 0 .618em;
+	border: 1px solid;
+	white-space: nowrap; }
+#songPickerHTML td:last-child {
+	font-style: oblique; }
+
+footer p {
+	margin: 0 1.618em;
+	font-size: .78em;
+	font-weight: bold; }
+footer note {
+	margin-right: 2.618em; }
+footer note:last-child {
+	margin-right: 0; }
+
+mark.note,
+.numerance {
+	font-size: .618em;
+	vertical-align: .618em;
+	line-height: 100%; }
+.macronym {
+	display: inline;
+	font-size: .763924em;
+	vertical-align: .236076em;
+	line-height: 100%; }
+mark {
+	color: inherit;
+	background-color: inherit; }
+big {
+	font-size: 1.618em;
+	line-height: .5em; }
+.title {
+	text-decoration: underline; }
+li .title {
+	font-weight: bold; }
+kbd span {
+	display: inline-block;
+	position: static;
+	border: 1px solid #8080FF;
+	border-bottom: 2px solid #404080;
+	border-right: 2px solid #404080;
+	border-radius: 1.618em / 2em;
+	color: white;
+	background-color: #202040;
+	text-align: center;
+	margin: 0 .382em;
+	padding: 0 .618em;  }
+
+</style>
+</head>
+<body>
+<header>
+<h1>Custom Web Software Development</h1>
+<figure>
+<img id='logo' src="images/SoftMoon-WebWare.gif" alt="SoftMoon-WebWare">
+<figcaption>JavaScript<mark class='macronym'>™</mark>, <abbr>HTML 5</abbr>, <abbr>CSS 4</abbr>, &amp; <abbr>PHP 8</abbr>:
+<span>Innovative Enterprise level Scripting for interactive sites, <acronym title='software as a service'>SaaS</acronym>, &amp; cross-platform desktop apps</span></figcaption>
+</figure>
+<menu>
+<li><a href="./">Home</a></li>
+<li><a href="dealer-websites/" target='dealer'
+ title="Best Auto Dealer Websites">Automotive Dealer Website Development</a></li>
+<li><a href="OpenSource.php">Free desktop apps</a><menu>
+	<li><a href="Rainbow-Maker_instructions.html">Rainbow-Maker<mark class='macronym'>™</mark></a></li>
+	<li><a href="MasterColorPicker_instructions.php">MasterColorPicker<mark class='macronym'>™</mark></a></li>
+	</menu></li>
+<li><a href="OpenSource.php">Free libraries: <abbr>PHP</abbr> and JavaScript<mark class='macronym'>™</mark></a><menu>
+	<li><a href="UniDOM_instructions.html">UniDOM.js<mark class='macronym'>™</mark> x-browser solution +</a></li>
+	<li class='current'><a href="#content"><code>&lt;input type="picker"&gt;</code></a></li>
+	<li><a href="FormFieldGenie-js_instructions.html">FormFieldGenie<mark class='macronym'>™</mark> fieldset multiplier</a></li>
+	<li><a href="validate-email_instructions.html">eMail address validation scripts</a></li>
+	<li><a href="PHP-functions_instructions.php"><abbr>PHP</abbr> Utility Functions</a></li>
+	</menu></li>
+<li><a href="Komodo/">ActiveState Komodo Edit support</a></li>
+</menu>
+<h1>JavaScript<mark class='macronym'>™</mark> powered <code>&lt;input type="picker"&gt;</code></h1>
+</header>
+
+<main id='content'>
+<p><abbr>HTML</abbr> forms are an essential part of interacting with web-page viewers,
+and the <code>&lt;input&gt;</code> tag is the most common interface tool used.&nbsp;
+However, it gives little help to users that need to enter complex and/or specific data.&nbsp;
+<abbr>HTML5</abbr> introduces the <code>&lt;datalist&gt;</code> element which can turn an
+<code>&lt;input&gt;</code> tag into a hybrid with a <code>&lt;select&gt;</code> tag,
+giving the user a pull-down menu to choose from without limiting the input data to only the menu items.&nbsp;
+But sometimes that’s not enough…you want to present to your users
+a complex table of data to choose from, or maybe some other source needs to generate the data on-the-fly,
+such as a color-picker (like the MasterColorPicker project, for which this project was developed).&nbsp;
+So here I present the <code>&lt;input type="picker"&gt;</code> project.&nbsp;
+If an <code>&lt;input type="text"&gt;</code> tag is like a car,
+and a <code>&lt;textarea&gt;</code> tag is like a pickup truck,
+and a <code>&lt;select&gt;</code> tag is like a bus,
+and an <code>&lt;input type="text"&gt;</code> with a <code>&lt;datalist&gt;</code> is like a train,
+then an <code>&lt;input&gt;</code> with a <code>Picker</code> interface is like an multi-city intergalactic spacecraft.</p>
+
+<p>Using the <code>Picker</code> Class with an <code>&lt;input type="text"&gt;</code> is simple.&nbsp;
+Just as you would do using the <code>&lt;datalist&gt;</code> tag, the “picker” <abbr>HTML</abbr>
+is separate from the <code>&lt;input&gt;</code> tag itself.&nbsp;
+However, <code>&lt;datalist&gt;</code>s are simple “lists”, and you may only associate one <code>&lt;datalist&gt;</code>
+with each <code>&lt;input&gt;</code>.&nbsp;
+With the <code>Picker</code> Class you may associate any number of “panels” (<abbr>HTML</abbr> elements),
+and each panel may have any number of “pickers” along with any other <abbr>HTML</abbr> markup
+and auxiliary displays and data, as well as “interface” elements − form controls
+(such as <code>&lt;input&gt;</code>s and <code>&lt;select&gt;</code>s)
+that modify the “pickers” themselves and/or their behaviors.&nbsp;
+Furthermore, not only may you associate multiple “panels” and “pickers” with an <code>&lt;input&gt;</code>,
+you may associate multiple <code>&lt;input&gt;</code>s with the same “panel”(s)/“picker”(s).&nbsp;
+For instance, the <a href="MasterColorPicker_instructions.php">MasterColorPicker</a> project uses
+8 “panels” and 14 “pickers” by default (at this time of writing),
+and the <a href="RainbowMaker%202.0/">Rainbow-Maker 2</a> project
+associates the MasterColorPicker with many different <code>&lt;input&gt;</code>s.</p>
+
+<p>“Panels” and their “pickers” receive applied <abbr>CSS</abbr> class-names when “active”,
+allowing the developer to pop-up and pop-out the picker <abbr>HTML</abbr> if desired,
+or style it any way needed for complete flexibility.&nbsp;
+“Panels” may be styled any way you choose using your custom <abbr>CSS</abbr>,
+and if you have more than one panel, they may visually overlap on the display;&nbsp;
+the <code>Picker</code> Class manages an additional set of class-names which allows you to manage the
+Z-index level of each panel, so the last one clicked on may be “brought to the top.”&nbsp;
+The target <code>&lt;input&gt;</code> (or <code>&lt;textarea&gt;</code> but for simplicity we will just refer to inputs)
+also needs to be kept in focus when you click on the Picker Interface “panel(s).”&nbsp;
+Additionally, “panels” and “pickers” may be assigned user-defined event-handlers which are triggered
+when they become “active” or “inactive” (<code>onPickerStateChange</code> and <code>onInterfaceStateChange</code>).&nbsp;
+All this is managed by the Picker Class by a complex interaction − a dance − of event-handlers.&nbsp;
+This is its primary function in life.&nbsp;
+It would be easy to have a JavaScript function that
+simply adds/replaces an <code>&lt;input&gt;</code>’s <code>value</code> with anything when you click on whatever…&nbsp;
+And it’s easy to keep up with which <code>&lt;input&gt;</code> is the one of many
+of which to replace the old value with a new value.&nbsp;
+The trick is keeping up with when an <code>&lt;input&gt;</code> is “active”, especially when Picker-interfaces
+need to scroll or if they need to use another <abbr>HTML</abbr> element that requires keyboard “focus.”&nbsp;
+Generally, when an <code>&lt;input&gt;</code> is associated with a Picker-interface,
+the <code>&lt;input&gt;</code> and Picker are considered “active” when the <code>&lt;input&gt;</code> has “focus.”&nbsp;
+If your interface itself needs to have an <abbr>HTML</abbr> element that requires keyboard “focus”,
+including other <code>&lt;input type='text'&gt;</code>s,
+<code>&lt;input type='file'&gt;</code>s, <code>&lt;input type='number'&gt;</code>s,
+<code>&lt;textarea&gt;</code>s, <code>&lt;select&gt;</code>s, etc.,
+then they need to be “registered.”&nbsp;
+The <code>Picker</code> Class gives you all you need to manage all the event-handlers required to maintain the “focus”
+of the target <code>&lt;input&gt;</code> associated with a Picker-interface when necessary, and to keep track of
+when the Picker-interface is “active”, and when it is not.&nbsp;
+The comments in the code file explain all this.&nbsp;
+</p>
+
+<p>But wait!&nbsp;
+You don’t even need to use an <code>&lt;input type='text'&gt;</code> with the <code>Picker</code> Class.&nbsp;
+<abbr>HTML</abbr> <code>&lt;textarea&gt;</code>s, <code>&lt;select&gt;</code>s,
+<code>&lt;input type='text' list='<var>datalistID</var>'&gt;</code>s,
+and even document text-nodes are automatically recognized by the <code><var>Picker_instance</var>.pick()</code> method.&nbsp;
+By default, the <code><var>Picker_instance</var>.dataTarget</code> receives the data-value picked by the end user.&nbsp;
+If no <code>dataTarget</code> is set then the <code><var>Picker_instance</var>.masterTarget</code> is used, if any.&nbsp;
+The <code>dataTarget</code> and <code>masterTarget</code> each may be any
+JavaScript<mark class='macronym'>™</mark> Object.&nbsp;
+Or they may be <code>&lt;input type='hidden'&gt;</code> if you don't care to show the user the picked value,
+but want to send the value back to the server with a form-submittal.&nbsp;
+To supplement this functionality, add a JavaScript<mark class='macronym'>™</mark> function to the
+Array of <code><var>Picker_instance</var>.pickFilters</code>.&nbsp;
+To replace this functionality, replace the <code><var>Picker_instance</var>.pick</code> method with your own function.</p>
+
+<p>There is a plethora of comments embedded in the <code>Picker</code> JavaScript<mark class='macronym'>™</mark> code
+which you should read if you want to use this package.&nbsp;
+Beyond that, as usual a simple example does best to explain the usage of the <code>Picker</code> Class Object.&nbsp;
+Below you will see the code for a simple <abbr>HTML</abbr> <code>Picker</code> example and the working demo
+of this example code.&nbsp;
+<!-- If you open your browser’s JavaScript<mark class='macronym'>™</mark> console,
+you can see the “flow” of events as they happen.&nbsp;  -->
+The MasterColorPicker<span class='macronym'>™</span> project is a more complex example of
+using the <code>Picker</code> package.&nbsp;
+If you study the <span class='filename'>MasterColorPicker2.js</span> file, you will see the
+<code>x_ColorPicker</code> Class (found near the beginning of that file)
+acts as an intermediary between the color-pickers and the <code>Picker</code> Class.&nbsp;
+At the end of each color-picker’s code section you will see the event-handlers attached to each color-picker,
+and how they interact with the <code>x_ColorPicker</code> class to “pick” colors;&nbsp;
+and the YinYang NíHóng<span class='macronym'>™</span> Color Picker code shows an advanced example of
+using the <code>onPickerStateChange</code> event.&nbsp;
+At the end of the <span class='filename'>MasterColorPicker2.js</span> file you will see how the
+<code>MasterColorPicker</code> Object (which is used by the <code>x-ColorPicker</code> Class)
+is created from an instance of the <code>Picker</code> Class,
+an example of how the <code>pickFilter</code> works, and another example of using the <code>onPickerStateChange</code> event.</p>
+
+All these examples below use the following simple <abbr>CSS</abbr>:
+<code>
+&#60;style&#62;
+label {
+  display&#58; inline-block&#59;
+  position&#58; relative&#59;
+  margin-bottom&#58; 4em&#59; }
+label .pickerPanel {
+  position&#58; absolute&#59;
+  top&#58; 1.1618em&#59;
+  right&#58; -10.618em&#59; }
+.pickerPanel {display&#58; none&#59;}
+.activePicker {display&#58; table&#59;}
+&#60;/style&#62;
+</code>
+
+A <em>very</em> simple example:
+<code>
+&#60;label&#62;Pick a color &#60;input type='text' id='getColor' /&#62;
+&#60;table id='colorPicker'&#62;
+&#60;caption&#62;Colors&#60;/caption&#62;
+&#60;tr&#62;
+	&#60;td style='background-color&#58;red'&#62;red&#60;/td&#62;
+	&#60;td style='background-color&#58;orange'&#62;orange&#60;/td&#62;
+	&#60;td style='background-color&#58;yellow'&#62;yellow&#60;/td&#62;
+	&#60;td style='background-color&#58;green'&#62;green&#60;/td&#62;
+	&#60;td style='background-color&#58;cyan'&#62;cyan&#60;/td&#62;
+	&#60;td style='background-color&#58;blue'&#62;blue&#60;/td&#62;
+	&#60;td style='background-color&#58;violet'&#62;violet&#60;/td&#62;
+	&#60;td style='background-color&#58;indigo'&#62;indigo&#60;/td&#62;
+&#60;/tr&#62;
+&#60;/table&#62;&#60;/label&#62;
+&#60;script type='text/javascript'&#62;
+  // note how you can use the required/included “UniDOM” package to add event handlers, or add them any other way.
+
+UniDOM.addEventHandler(window, 'onload', function() {
+  var itybitHTML=document.getElementById('colorPicker'),
+      itybitColorPicker=new SoftMoon.WebWare.Picker(itybitHTML),  // no options needed
+      itybitColorInput=document.getElementById('getColor'),
+      itybitColors=itybitHTML.getElementsByTagName('td'),
+      selector=function() {itybitColorPicker.pick(this.firstChild.data);};
+
+  for (var i=0&#59; i&#60;itybitColors.length&#59;  i++)  {
+    UniDOM.addEventHandler(itybitColors[i], 'onclick', selector)&#59;  }
+  itybitColorPicker.registerTargetElement(itybitColorInput)&#59;  })&#59;
+&#60;/script&#62;
+</code>
+<label>Pick a color <input type='text' id='getColor'>
+<table id='colorPicker' class='picker'>
+<caption>Colors</caption>
+<tr>
+	<td style='background-color:red'>red</td>
+	<td style='background-color:orange'>orange</td>
+	<td style='background-color:yellow'>yellow</td>
+	<td style='background-color:green'>green</td>
+	<td style='background-color:cyan'>cyan</td>
+	<td style='background-color:blue'>blue</td>
+	<td style='background-color:violet'>violet</td>
+	<td style='background-color:indigo'>indigo</td>
+</tr>
+</table></label>
+<script type='text/javascript'>
+UniDOM.addEventHandler(window, 'onload', function() {
+  var itybitHTML=document.getElementById('colorPicker'),
+      itybitColorPicker=new SoftMoon.WebWare.Picker(itybitHTML),  // no options needed
+      itybitColorInput=document.getElementById('getColor'),
+      itybitColors=itybitHTML.getElementsByTagName('td'),
+			selector=function() {itybitColorPicker.pick(this.firstChild.data);};
+
+  for (var i=0; i<itybitColors.length;  i++)  {
+	  UniDOM.addEventHandler(itybitColors[i], 'onclick', selector);  }
+	itybitColorPicker.registerTargetElement(itybitColorInput);  });
+</script>
+<br>
+<span>Basically the same, but with two different target-inputs, and a relocating Picker.&nbsp;
+Note the difference in the way the <code>dataTarget &lt;input&gt;</code>s are registered:</span>
+<code>
+&#60;div id='relocatableColorPicker'&#62;
+&#60;label&#62;Foreground Color&#58;&#60;input type='text' /&#62;&#60;/label&#62;
+&#60;label&#62;Background Color&#58;&#60;input type='text' /&#62;&#60;/label&#62;
+&#60;/div&#62;
+&#60;script type='text/javascript'&#62;
+UniDOM.addEventHandler(window, 'onload', function() {
+  var itybitHTML=document.getElementById('colorPicker').cloneNode(true),   // we might instead use &#147;removeNode&#148; but we keep the original because it is used in the previous example.
+      itybitColorPicker=new SoftMoon.WebWare.Picker(itybitHTML),  // no options needed
+      cInputs=document.getElementById('relocatableColorPicker').getElementsByTagName('input'),
+      itybitColors=itybitHTML.getElementsByTagName('td'),
+      selector=function() {itybitColorPicker.pick(this.firstChild.data)&#59;}&#59;
+
+  for (var i=0&#59; i&#60;itybitColors.length&#59;  i++)  {
+    UniDOM.addEventHandler(itybitColors[i], 'onclick', selector)&#59;  }
+  for (var i=0&#59; i&#60;cInputs.length&#59;  i++)  {            // ↓↓note we pass in the &lt;label&gt; for each input as the containing element for the picker.
+    itybitColorPicker.registerTargetElement(cInputs[i], cInputs[i].parentNode)&#59;  }  })&#59;
+&#60;/script&#62;
+</code>
+<div id='relocatableColorPicker'>
+<label>Foreground Color:<input type='text'></label>
+<label>Background Color:<input type='text'></label>
+</div>
+<script type='text/javascript'>
+UniDOM.addEventHandler(window, 'onload', function() {
+  var itybitHTML=document.getElementById('colorPicker').cloneNode(true),   // we might instead use “removeNode” but we keep the original because it is used in the previous example.
+      itybitColorPicker=new SoftMoon.WebWare.Picker(itybitHTML),  // no options needed
+      cInputs=document.getElementById('relocatableColorPicker').getElementsByTagName('input'),
+      itybitColors=itybitHTML.getElementsByTagName('td'),
+			selector=function() {itybitColorPicker.pick(this.firstChild.data);};
+
+  for (var i=0; i<itybitColors.length;  i++)  {
+	  UniDOM.addEventHandler(itybitColors[i], 'onclick', selector);  }
+  for (var i=0; i<cInputs.length;  i++)  {              // ↓↓note we pass in the <label> for each input as the containing element for the picker.
+	  itybitColorPicker.registerTargetElement(cInputs[i], cInputs[i].parentNode);  }  });
+</script>
+<p>As mentioned above, the <code>Picker</code> Class manages more complex situations
+where the Picker <abbr>HTML</abbr> Interface needs to scroll (using a scroll-bar).&nbsp;
+
+
+The idea of the <code>Picker</code> Class is that when you click anywhere on the Picker <abbr>HTML</abbr> Interface,
+“focus” is retained by the target <code>&lt;input&gt;</code>, even if nothing is “picked.”&nbsp;
+Click on the caption of the itybitColorPicker above (where it says “Colors”),
+or anywhere on the yellow background of the song-picker below, as a demonstration of this principle.</p>
+
+<p>This was the trick in older browsers, because often times clicking on a scroll-bar did not
+generate an <code>onclick</code> event.&nbsp;
+Focus is taken away from the target <code>&lt;input&gt;</code>, and it needs to be “refocused.”&nbsp;
+The <code>Picker</code> Class needs to keep track of where the mouse is,
+so when a scroll-bar is clicked on this situation can be remedied.&nbsp;
+
+Sometimes with older browsers the “onclick” event for the Picker <abbr>HTML</abbr> comes before the
+“onblur” event for the <code>&lt;input&gt;</code>, sometimes the other way around.&nbsp;
+If the “blur” occurs first, depending on your <abbr>CSS</abbr> rules of course, the Picker <abbr>HTML</abbr>
+may be hidden before the “click” happens;
+then the click does not register on the Picker, but rather on whatever is underneath.&nbsp;
+The <em>older</em> version of <code>Picker</code> Class remedies this by keeping track of when the mouse is hovering over a “Picker panel,”
+and also when it is hovering over the first-of-kin children.&nbsp;
+If it is over the “panel,” but not over any of the children, then it must be over the scroll-bar.&nbsp;
+If a registered target <code>&lt;input&gt;</code> looses focus,
+it will automatically refocus when the mouse is hovering over said scroll-bars.&nbsp;
+At this point it might be thought “why not simply refocus if the mouse is over the Picker panel in general?”&nbsp;
+That then voids the “onclick” event; it simply then never occurs and nothing gets “picked” —
+at least in some browsers under some conditions;&nbsp;
+I pulled hair for a while when the original prototypes for the <code>Picker</code> code would work and then wouldn’t,
+so I would modify the way the handlers interacted, and that would work and then not…&nbsp;
+Anyway, the “onclick” event on a picker-panel then refocuses the <code>dataTarget &lt;input&gt;</code>.&nbsp;
+That was all a mess that still sometimes failed in complex situations.</p>
+
+<p>With newer <abbr>HTML5</abbr> browsers, multiple events and event-handlers have more of a “defined”
+order of occurance, based (at least) on the order that handlers are registered.&nbsp;
+The “dance of event-handlers” is by definition random in the old <acronym>DOM</acronym> standard.&nbsp;
+The latest version of the Picker Class works only with the newer browsers, and without needing to keep track of the mouse.</p>
+
+<p>If you want to use more that one “panel”
+(<abbr>i.e.</abbr> more than the <code>mainPanel</code>,
+which is passed in as the first (required) argument when creating a new <code>Picker</code> instance),
+you need to “register” the additional panels,
+the same as you need to “register” interface control-elements
+(see above, and also the comments in the <code>Picker</code> code file).&nbsp;
+Registering an additional panel (besides the <code>mainPanel</code>) also automatically
+registers any “interface control-elements” within that panel.&nbsp;
+If you want to use more than one “picker,” the <code>Picker</code> Class can manage that also,
+provided all the “pickers” reside within these “registered”
+<code><var>PickerInstance</var>.panels</code> (including the <code>mainPanel</code>).&nbsp;
+The <code>options</code> Object that can be passed in as a
+second argument when creating a new <code>Picker</code> instance
+may hold a <code>pickerSelect</code> property that references either a <code>&lt;select&gt;</code> tag
+or an array of <code>&lt;input type='checkbox‖radio'&gt;</code> buttons that can control which “Pickers”
+are considered “active.”&nbsp;
+You should also probably “register” your <code>pickerSelect</code> if it is a <code>&lt;select&gt;</code> tag,
+assuming you want to keep the “focus” of the target <code>&lt;input&gt;</code> while selecting different pickers.&nbsp;</p>
+
+One final example (using the same <abbr>CSS</abbr> as those above, but with the addition shown below):
+<code>
+&#60;style&#62;
+#songs .picker {
+  display&#58; none&#59; }
+#songs .activePicker {
+  display&#58; table&#59; }
+#songs {
+  padding: 2em 0 .618em 0;
+  margin: .618em 12.618em;
+  position: relative; }
+#songPickerControls.activePicker {
+  position: absolute;
+  top: 1.1618em;
+  left: 0;
+  display: block;
+  width: 100%;
+  text-align: center;
+  background-color: yellow; }
+#songs label {
+  margin: 0 .618em; }
+#songPickerHTML {
+  background-color: yellow;
+  border: 2px solid blue; }
+&#60;/style&#62;
+
+&#60;fieldset id='songs'&#62;&#60;legend&#62;Pick 3 songs&#60;/legend&#62;
+
+&#60;label&#62;1. &#60;input type='text' /&#62;&#60;/label&#62;
+&#60;label&#62;2. &#60;input type='text' /&#62;&#60;/label&#62;
+&#60;label&#62;3. &#60;input type='text' /&#62;&#60;/label&#62;
+
+&#60;div id='songPickerHTML'&#62;&#60;!-- this is the picker’s mainPanel --&#62;
+
+&#60;table id='PinkFloyd' class='picker rock'&#62;&#60;caption&#62;Pink Floyd&#60;/caption&#62;
+&#60;tr&#62;&#60;th&#62;song&#60;/th&#62;&#60;th&#62;from album&#60;/th&#62;&#60;/tr&#62;
+&#60;tr&#62;&#60;td&#62;Set the Controls for the Heart of the Sun&#60;/td&#62;&#60;td&#62;A Saucerful Of Secrets&#60;/td&#62;&#60;/tr&#62;
+&#60;tr&#62;&#60;td&#62;Main Theme&#60;/td&#62;&#60;td&#62;More&#60;/td&#62;&#60;/tr&#62;
+&#60;tr&#62;&#60;td&#62;Echoes&#60;/td&#62;&#60;td&#62;Meddle&#60;/td&#62;&#60;/tr&#62;
+&#60;/table&#62;
+
+&#60;table id='GratefulDead' class='picker rock'&#62;&#60;caption&#62;Grateful Dead&#60;/caption&#62;
+&#60;tr&#62;&#60;th&#62;song&#60;/th&#62;&#60;th&#62;from album&#60;/th&#62;&#60;/tr&#62;
+&#60;tr&#62;&#60;td&#62;Bertha&#60;/td&#62;&#60;td&#62;Grateful Dead&#60;/td&#62;&#60;/tr&#62;
+&#60;tr&#62;&#60;td&#62;China Cat Sunflower&#60;/td&#62;&#60;td&#62;Aoxomoxoa&#60;/td&#62;&#60;/tr&#62;
+&#60;tr&#62;&#60;td&#62;Eyes Of The World&#60;/td&#62;&#60;td&#62;Wake Of The Flood&#60;/td&#62;&#60;/tr&#62;
+&#60;/table&#62;
+
+&#60;table id='LedZeppelin' class='picker rock'&#62;&#60;caption&#62;Led Zeppelin&#60;/caption&#62;
+&#60;tr&#62;&#60;th&#62;song&#60;/th&#62;&#60;th&#62;from album&#60;/th&#62;&#60;/tr&#62;
+&#60;tr&#62;&#60;td&#62;Whole Lotta Love&#60;/td&#62;&#60;td&#62;Led Zeppelin II&#60;/td&#62;&#60;/tr&#62;
+&#60;tr&#62;&#60;td&#62;Stairway to Heaven&#60;/td&#62;&#60;td&#62;Led Zeppelin IV&#60;/td&#62;&#60;/tr&#62;
+&#60;tr&#62;&#60;td&#62;In The Light&#60;/td&#62;&#60;td&#62;Physical Graffiti&#60;/td&#62;&#60;/tr&#62;
+&#60;/table&#62;
+
+&#60;table id='MilesDavis' class='picker jazz'&#62;&#60;caption&#62;Miles Davis&#60;/caption&#62;
+&#60;tr&#62;&#60;th&#62;song&#60;/th&#62;&#60;th&#62;from album&#60;/th&#62;&#60;/tr&#62;
+&#60;tr&#62;&#60;td&#62;Flamenco Sketches&#60;/td&#62;&#60;td&#62;Kind Of Blue&#60;/td&#62;&#60;/tr&#62;
+&#60;tr&#62;&#60;td&#62;&#147;Shhh&#148;/&#147;Peaceful&#148;&#60;/td&#62;&#60;td&#62;In A Silent Way&#60;/td&#62;&#60;/tr&#62;
+&#60;tr&#62;&#60;td&#62;Pharaoh&#146;s Dance&#60;/td&#62;&#60;td&#62;Bitches Brew&#60;/td&#62;&#60;/tr&#62;
+&#60;/table&#62;
+
+&#60;table id='TheloniusMonk' class='picker jazz'&#62;&#60;caption&#62;Thelonius Monk&#60;/caption&#62;
+&#60;tr&#62;&#60;th&#62;song&#60;/th&#62;&#60;th&#62;from album&#60;/th&#62;&#60;/tr&#62;
+&#60;tr&#62;&#60;td&#62;Bright Mississippi&#60;/td&#62;&#60;td&#62;Monk&#146;s Dream&#60;/td&#62;&#60;/tr&#62;
+&#60;tr&#62;&#60;td&#62;I&#146;m Confessin&#146; (That I Love You)&#60;/td&#62;&#60;td&#62;Solo Monk&#60;/td&#62;&#60;/tr&#62;
+&#60;tr&#62;&#60;td&#62;Ugly Beauty&#60;/td&#62;&#60;td&#62;Underground&#60;/td&#62;&#60;/tr&#62;
+&#60;/table&#62;
+&#60;table id='TedeschiTrucksBand' class='picker blues'&#62;&#60;caption&#62;Tedeschi Trucks Band&#60;/caption&#62;
+&#60;tr&#62;&#60;th&#62;song&#60;/th&#62;&#60;th&#62;from album&#60;/th&#62;&#60;/tr&#62;
+&#60;tr&#62;&#60;td&#62;Don&#146;t Let Me Slide&#60;/td&#62;&#60;td&#62;Revelator&#60;/td&#62;&#60;/tr&#62;
+&#60;tr&#62;&#60;td&#62;Love Has Something Else To Say&#60;/td&#62;&#60;td&#62;Revelator&#60;/td&#62;&#60;/tr&#62;
+&#60;tr&#62;&#60;td&#62;Learn How To Love&#60;/td&#62;&#60;td&#62;Everybody&#146;s Talkin&#146;&#60;/td&#62;&#60;/tr&#62;
+&#60;/table&#62;
+
+&#60;table id='PinkAnderson' class='picker blues'&#62;&#60;caption&#62;Pink Anderson&#60;/caption&#62;
+&#60;tr&#62;&#60;th&#62;song&#60;/th&#62;&#60;th&#62;from album&#60;/th&#62;&#60;/tr&#62;
+&#60;tr&#62;&#60;td&#62;Papa&#146;s About To Get Mad / Gonna Tip Out Tonight&#60;/td&#62;&#60;td&#62;(single)&#60;/td&#62;&#60;/tr&#62;
+&#60;tr&#62;&#60;td&#62;Every Day In The Week Blues / C.C And O. Blues&#60;/td&#62;&#60;td&#62;(single)&#60;/td&#62;&#60;/tr&#62;
+&#60;tr&#62;&#60;td&#62;Greasy Greens&#60;/td&#62;&#60;td&#62;American Street Songs&#60;/td&#62;&#60;/tr&#62;
+&#60;/table&#62;
+
+&#60;table id='FloydCouncil' class='picker blues'&#62;&#60;caption&#62;Floyd Council&#60;/caption&#62;
+&#60;tr&#62;&#60;th&#62;song&#60;/th&#62;&#60;th&#62;from album&#60;/th&#62;&#60;/tr&#62;
+&#60;tr&#62;&#60;td&#62;I Don&#146;t Want No Hungry Woman&#60;/td&#62;&#60;td&#62;Carolina Blues&#60;/td&#62;&#60;/tr&#62;
+&#60;tr&#62;&#60;td&#62;Lookin&#146; For My Baby&#60;/td&#62;&#60;td&#62;Carolina Blues&#60;/td&#62;&#60;/tr&#62;
+&#60;tr&#62;&#60;td&#62;Workin Man Blues&#60;/td&#62;&#60;td&#62;Carolina Blues&#60;/td&#62;&#60;/tr&#62;
+&#60;/table&#62;
+
+&#60;/div&#62;&#60;!--  close  songPickerHTML  --&#62;
+
+&#60;div id='songPickerControls'&#62;
+&#60;label&#62;Style&#58; &#60;select id='musicStyle'&#62;
+&#60;option selected='selected'&#62;rock&#60;/option&#62;
+&#60;option&#62;jazz&#60;/option&#62;
+&#60;option&#62;blues&#60;/option&#62;
+&#60;/select&#62;&#60;/label&#62;
+&#60;label&#62;Artist&#58; &#60;select id='artists'&#62;
+&#60;option class='rock' selected='selected'&#62;Pink Floyd&#60;/option&#62;
+&#60;option class='rock'&#62;Grateful Dead&#60;/option&#62;
+&#60;option class='rock'&#62;Led Zeppelin&#60;/option&#62;
+&#60;option class='jazz'&#62;Miles Davis&#60;/option&#62;
+&#60;option class='jazz'&#62;Thelonius Monk&#60;/option&#62;
+&#60;option class='blues'&#62;Tedeschi Trucks Band&#60;/option&#62;
+&#60;option class='blues'&#62;Pink Anderson&#60;/option&#62;
+&#60;option class='blues'&#62;Floyd Council&#60;/option&#62;
+&#60;/select&#62;&#60;/label&#62;
+&#60;/div&#62;
+
+&#60;/fieldset&#62;
+
+&#60;script type='text/javascript'&#62;
+UniDOM.addEventHandler(window, 'onload', function() {
+  var songsHTML=document.getElementById('songPickerHTML'),
+      musicStyle=document.getElementById('musicStyle'),
+      artistSelect=document.getElementById('artists'),
+      sInputs=document.getElementById('songs').getElementsByTagName('input'),
+      songs=songsHTML.getElementsByTagName('tr'),
+      SongPicker=new SoftMoon.WebWare.Picker(songsHTML, {picker_select&#58; artistSelect),
+      selector=function() {SongPicker.pick(this.firstChild.data)&#59;},
+      setStyle=function(onBoot) {
+        for (var i=0, flag=false&#59;  i&#60;artistSelect.options.length&#59;  i++)  {
+          artistSelect.options[i].disabled=!(this.value===artistSelect.options[i].className)&#59;
+          if (!flag) artistSelect.options[i].selected=(flag=(this.value===artistSelect.options[i].className))&#59;   }
+        if (onBoot!==true)  SongPicker.choosePicker()&#59;  }&#59;
+
+  for (var i=0&#59; i&#60;songs.length&#59;  i++)  { //attach event handlers to each song in every table
+    if (songs[i].firstChild.nodeName==='TD')  UniDOM.addEventHandler(songs[i].firstChild, 'onclick', selector)&#59;  }
+  for (i=0&#59; i&#60;sInputs.length&#59;  i++)  {           // ↓↓note we pass in the &#60;label&#62; for each input as the containing element for the picker.
+    SongPicker.registerTargetElement(sInputs[i], sInputs[i].parentNode)&#59;  }
+  SongPicker.registerInterfacePanel(document.getElementById('songPickerControls'))&#59;
+  UniDOM.addEventHandler(musicStyle, 'onchange', setStyle)&#59;
+  setStyle.call(musicStyle, true)&#59;  })&#59;
+&#60;/script&#62;
+</code>
+<fieldset id='songs'><legend>Pick 3 songs</legend>
+<label>1. <input type='text'></label>
+<label>2. <input type='text'></label>
+<label>3. <input type='text'></label>
+<div id='songPickerHTML'>
+<table id='PinkFloyd' class='picker rock'><caption>Pink Floyd</caption>
+<tr><th>song</th><th>from album</th></tr>
+<tr><td>Set the Controls for the Heart of the Sun</td><td>A Saucerful Of Secrets</td></tr>
+<tr><td>Main Theme</td><td>More</td></tr>
+<tr><td>Echoes</td><td>Meddle</td></tr>
+</table>
+<table id='GratefulDead' class='picker rock'><caption>Grateful Dead</caption>
+<tr><th>song</th><th>from album</th></tr>
+<tr><td>Bertha</td><td>Grateful Dead</td></tr>
+<tr><td>China Cat Sunflower</td><td>Aoxomoxoa</td></tr>
+<tr><td>Eyes Of The World</td><td>Wake Of The Flood</td></tr>
+</table>
+<table id='LedZeppelin' class='picker rock'><caption>Led Zeppelin</caption>
+<tr><th>song</th><th>from album</th></tr>
+<tr><td>Whole Lotta Love</td><td>Led Zeppelin II</td></tr>
+<tr><td>Stairway to Heaven</td><td>Led Zeppelin IV</td></tr>
+<tr><td>In The Light</td><td>Physical Graffiti</td></tr>
+</table>
+<table id='MilesDavis' class='picker jazz'><caption>Miles Davis</caption>
+<tr><th>song</th><th>from album</th></tr>
+<tr><td>Flamenco Sketches</td><td>Kind Of Blue</td></tr>
+<tr><td>“Shhh”/“Peaceful”</td><td>In A Silent Way</td></tr>
+<tr><td>Pharaoh’s Dance</td><td>Bitches Brew</td></tr>
+</table>
+<table id='TheloniusMonk' class='picker jazz'><caption>Thelonius Monk</caption>
+<tr><th>song</th><th>from album</th></tr>
+<tr><td>Bright Mississippi</td><td>Monk’s Dream</td></tr>
+<tr><td>I’m Confessin’ (That I Love You)</td><td>Solo Monk</td></tr>
+<tr><td>Ugly Beauty</td><td>Underground</td></tr>
+</table>
+<table id='TedeschiTrucksBand' class='picker blues'><caption>Tedeschi Trucks Band</caption>
+<tr><th>song</th><th>from album</th></tr>
+<tr><td>Don’t Let Me Slide</td><td>Revelator</td></tr>
+<tr><td>Love Has Something Else To Say</td><td>Revelator</td></tr>
+<tr><td>Learn How To Love</td><td>Everybody’s Talkin’</td></tr>
+</table>
+<table id='PinkAnderson' class='picker blues'><caption>Pink Anderson</caption>
+<tr><th>song</th><th>from album</th></tr>
+<tr><td>Papa’s About To Get Mad / Gonna Tip Out Tonight</td><td>(single)</td></tr>
+<tr><td>Every Day In The Week Blues / C.C And O. Blues</td><td>(single)</td></tr>
+<tr><td>Greasy Greens</td><td>American Street Songs</td></tr>
+</table>
+<table id='FloydCouncil' class='picker blues'><caption>Floyd Council</caption>
+<tr><th>song</th><th>from album</th></tr>
+<tr><td>I Don’t Want No Hungry Woman</td><td>Carolina Blues</td></tr>
+<tr><td>Lookin’ For My Baby</td><td>Carolina Blues</td></tr>
+<tr><td>Workin Man Blues</td><td>Carolina Blues</td></tr>
+</table>
+</div>
+<div id='songPickerControls'>
+<label>Style: <select id='musicStyle'>
+<option selected='selected'>rock</option>
+<option>jazz</option>
+<option>blues</option>
+</select></label>
+<label>Artist: <select id='artists'>
+<option class='rock' selected='selected'>Pink Floyd</option>
+<option class='rock'>Grateful Dead</option>
+<option class='rock'>Led Zeppelin</option>
+<option class='jazz'>Miles Davis</option>
+<option class='jazz'>Thelonius Monk</option>
+<option class='blues'>Tedeschi Trucks Band</option>
+<option class='blues'>Pink Anderson</option>
+<option class='blues'>Floyd Council</option>
+</select></label>
+</div>
+</fieldset>
+<script type='text/javascript'>
+UniDOM.addEventHandler(window, 'onload', function() {
+  var songsHTML=document.getElementById('songPickerHTML'),
+			musicStyle=document.getElementById('musicStyle'),
+      artistSelect=document.getElementById('artists'),
+			sInputs=document.getElementById('songs').getElementsByTagName('input'),
+      songs=songsHTML.getElementsByTagName('tr'),
+      SongPicker=new SoftMoon.WebWare.Picker(songsHTML, {picker_select: artistSelect}),
+			selector=function() {SongPicker.pick(this.firstChild.data);},
+			setStyle=function(onBoot) {
+			  for (var i=0, flag=false;  i<artistSelect.options.length;  i++)  {
+					artistSelect.options[i].disabled=!(this.value===artistSelect.options[i].className);
+					if (!flag) artistSelect.options[i].selected=(flag=(this.value===artistSelect.options[i].className));   }
+				if (onBoot!==true)  SongPicker.choosePicker();  };
+
+  for (var i=0; i<songs.length;  i++)  { //attach event handlers to each song in every table
+	  if (songs[i].firstChild.nodeName==='TD')  UniDOM.addEventHandler(songs[i].firstChild, 'onclick', selector);  }
+  for (i=0; i<sInputs.length;  i++)  {              // ↓↓note we pass in the <label> for each input as the containing element for the picker.
+	  SongPicker.registerTargetElement(sInputs[i], sInputs[i].parentNode);  }
+	SongPicker.registerInterfacePanel(document.getElementById('songPickerControls'));
+	UniDOM.addEventHandler(musicStyle, 'onchange', setStyle);
+	setStyle.call(musicStyle, true);  });
+</script>
+<p>The above example need not use two panels, and realistically complicates a simple interface.&nbsp;
+But if you were to include items such as dates, publishers, playtimes, etc. into the tables in this example,
+you may want to filter the possible song selections using any number of factors.&nbsp;
+In a real-world shopping-cart project, having these filters in a separate panel from the “pickers,”
+maybe even one that is always shown to the end-user,
+can be an optimal way of organizing your <abbr>HTML</abbr> page.</p>
+
+<p>The version 2+ release of the Picker Class adds even better support for “interface Elements” in the
+pickers you develop.&nbsp;  Tab-key support within interface Elements has been expanded,
+and a new concept of “interface Targets” is now available for use.&nbsp;
+With version 2+ of the Picker Class, the non-standard <abbr>HTML</abbr> attributes
+“tabToTarget” (same as Version 1 release) and
+“backTabToTarget” may have values of <code>"true"</code> or <code>"false"</code>.&nbsp;
+When registering an “interface panel” the first and last “interface Elements” found on the panel
+by default are registered to backtab-to-target and tab-to-target, respectively.&nbsp;
+You can override this with the <abbr>HTML</abbr> attributes markup,
+or with JavaScript<mark class='macronym'>™</mark> by “registering” them seperately
+with the desired options before registering the panel they are on (see the comments in the code-file).</p>
+
+<p>For more complex tab-control needs, <abbr>HTML</abbr> of course gives you the <code>tabIndex</code>
+attribute, but this can be confusing at best sometimes.&nbsp; If you are creating a plugin that should work within
+any web-page, how can you be sure that your tab-indexes are not going to conflict with what the develper wants,
+or with any other plugin?&nbsp;
+Since registering an “interface Element” interferes with the tab-key control by nessesity,
+I thought it best to fully integrate tab-key direction within this project for Version 2.&nbsp;
+This allows so much more flexibility and dynamicy in developing your Picker,
+with multiple panels that may be added/removed according to needs (perhaps loaded via Ajax on demand).&nbsp;
+So two more additional <abbr>HTML</abbr> attributes are now recognized by the Picker Class
+for “registered interface Elements”: “tabTo” and “backTabTo”.&nbsp;
+Their values may be either an <abbr>HTML</abbr> “id” of the Element to tab to,
+or a JavaScript<mark class='macronym'>™</mark> expression that evaluates to the Element to tab to.</p>
+
+<p>Users may also want to manually tab from one panel to another.&nbsp;
+By default they could now do this using <kbd><span>CTRL</span>+<span>Tab</span></kbd>
+and <kbd><span>SHIFT</span>+<span>CTRL</span>+<span>Tab</span></kbd>
+except for that most browsers block these key-combos from JavaScript<mark class='macronym'>™</mark>.&nbsp;
+So by default the Picker class <em>also</em> recognizes <kbd><span>CTRL</span>+<span>&lt;</span></kbd>
+and <kbd><span>CTRL</span>+<span>&gt;</span></kbd>
+(on <acronym>QUERTY</acronym> keyboards this would actually be
+<kbd><span>SHIFT</span>+<span>CTRL</span>+<span>,&lt;</span></kbd> and
+<kbd><span>SHIFT</span>+<span>CTRL</span>+<span>.&gt;</span></kbd>)
+to serve this need.&nbsp;
+On non-<acronym>QUERTY</acronym> keyboards, the <kbd><span>&lt;</span></kbd> and <kbd><span>&gt;</span></kbd> keys
+may normally generate characters when pressed in combo with the <kbd><span>CTRL</span></kbd> key,
+and the Picker’s default panel-tab control may then conflict (and not work!).&nbsp;
+You may alter the values found in:
+<code><var>pickerInstance</var>.panelTabKey</code> and <code><var>pickerInstance</var>.panelBacktabKey</code>
+which are <code>UniDOM.KeySniffer</code> objects.&nbsp;
+A value of <code>true</code> or <code>false</code> for a modifier-key means that key
+<em>must</em> be in the indicated state.&nbsp;
+A value of <code>undefined</code> for a modifier-key means the KeySniffer doesn’t care.</p>
+
+<p>You may want your “interface Element” to remain focused when it has focus
+when the user presses the <kbd><span>&crarr;Enter</span></kbd> key;
+or maybe you want keyboard focus to return to your data-target (<code>&lt;input&gt;</code>).&nbsp;
+The Boolean value found at <code><var>pickerInstance</var>.doKeepInterfaceFocus</code>
+controls that default action;
+but your “interface Element” itself may have an attribute <code>keep-focus</code>
+and this may have a Boolean value that overrides the <code><var>pickerInstance</var></code> default.&nbsp;
+For <abbr>HTML</abbr> <code>&lt;button&gt;</code> “interface Elements”
+the Picker also adds a customized <code>buttonpress</code> event
+when the <code>&lt;button&gt;</code> has keyboard focus
+and the user presses the <kbd><span>&crarr;Enter</span></kbd> key.</p>
+
+<p>“Interface Targets” are special “interface Elements” of your Picker
+that can receive a value “picked” from another part of your Picker,
+where normally a user “picks” something for the “data Target”.&nbsp;
+For instance, the <a href='https://softmoon-webware.com/MasterColorPicker_instructions.php'>MasterColorPicker</a>
+Version 2 project has a “color filter” that filters the color a user “picks” from one of the palettes,
+modifying the “picked” color by mixing in the “filter-color”.&nbsp;
+The user must first choose this filter-color, by picking a color from one of the palettes.&nbsp;
+So the color-filter panel has an “interface Target” to recieve the filter-color picked.&nbsp;
+As usual, the Picker Class makes sure keyboard focus is directed to the proper Element at all times,
+as well as properly managing the “top panel” under these shifting conditions.&nbsp;
+</p>
+
+
+
+<!-- p>There are two <code>Picker</code> Class files included with the bundle:
+<span class='filename'>JS_toolbox/SoftMoon-WebWare/Picker.js</span> and
+<span class='filename'>JS_toolbox/SoftMoon-WebWare/Picker.withDebug.js</span>.&nbsp;
+The debug feature can help you understand how the flow of events occur,
+expecially when developing Pickers with interface elements.&nbsp;
+To use the debug feature (and only if you want to debug), you will need to include
+<span class='filename'>JS_toolbox/Log.js</span> also.&nbsp;
+Please see the comments in the <code>Picker</code> code file on using the log.</p  -->
+
+</main>
+<footer>
+<p>SoftMoon-WebWare and its websites do not use or store “cookies” or other data on your computer/device
+(except for application demos that require your intent to do so, to store “settings” and the data you generate and desire to save).&nbsp;
+No personal data is transferred to any other entity
+(except with your intent as previously stated while using “demos”,
+and said data is only transferred to SoftMoon-WebWare.com and is <em>not</em> saved).&nbsp;
+You are not being tracked, quantified, or mined for data when visiting our sites.&nbsp;
+We hope you enjoy the advertisement-free experience that shuns the growing worldwide corporate-fascism movement.</p>
+<p>All content found on this page &amp; site Copyright © 2010, 2012, 2013, 2022  by SoftMoon-WebWare and its owner,
+all rights reserved, unless otherwise specifically noted.&nbsp;
+Trademarks and Service-Marks are property of SoftMoon-WebWare and its owner,
+all rights reserved, unless otherwise specifically noted.</p>
+<p>
+<note>“JavaScript” is a trademark of Oracle Corporation.</note>
+</p>
+</footer>
+</body>
+</html>
