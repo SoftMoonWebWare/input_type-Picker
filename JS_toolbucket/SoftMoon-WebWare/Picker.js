@@ -1,6 +1,6 @@
 //  character encoding: UTF-8 UNIX   tab-spacing: 2 ¡important!   word-wrap: no   standard-line-length: 160
 
-// Picker.js  Beta-4.0.8   January 30, 2023  by SoftMoon-WebWare.
+// Picker.js  Beta-4.0.10   March 21, 2023  by SoftMoon-WebWare.
 /*   written by and Copyright © 2011, 2012, 2013, 2014, 2015, 2019, 2020, 2022, 2023 Joe Golembieski, SoftMoon-WebWare
 
 		This program is free software: you can redistribute it and/or modify
@@ -32,7 +32,7 @@ if (typeof SoftMoon.WebWare !== 'object')   SoftMoon.WebWare=new Object;
 
 'use strict';
 
-;(function Picker_NS() {  // create a private namespace for the Picker class
+{  // create a private namespace for the Picker class
 
 //********* Picker constructor ************\\
 // the “mainPanel” should •be 1 or •wrap 1 or more
@@ -341,24 +341,24 @@ Picker.prototype.isInterfaceElement=function(elmnt)  {
 	return false;  }
 
 
-	//private members for registering “inputs” (TargetElements & InterfaceElements) - to be used with UniDOM’s DOM-crawling methods
-	function isInput(e)  {
-		return ( e.type!=='hidden'
-					 &&  (e.nodeName==='INPUT' || e.nodeName==='SELECT' || e.nodeName==='TEXTAREA' || e.nodeName==='BUTTON') );  }
-	function isTabStop(e)  {
-		var ti,
-				isI=( isInput(e)
-						 &&  !e.disabled
-						 &&  (!(ti=e.getAttribute('tabIndex')) || parseInt(ti)>=0) );
-		if (isI)  goDeep.doContinue=false;
-		return isI;  }
-	function goDeep(e)  {
-		return ( //avoids inputs on non-active pickers
-		goDeep.doContinue  // note that UniDOM’s DOM-crawling methods use this property to completely terminate further searching
-		&&  (!e.disabled)  // see UniDOM.disable()
-		&&  ( e.id==""  ||  !goDeep.picker_select  ||  !UniDOM.has$Class(e, goDeep.className)
-			||  goDeep.picker_select.isChosenPicker(e) ) );  }
-	function outDisabled(e) {return !e.disabled}
+//private members for registering “inputs” (TargetElements & InterfaceElements) - to be used with UniDOM’s DOM-crawling methods
+function isInput(e)  {
+	return ( e.type!=='hidden'
+				 &&  (e.nodeName==='INPUT' || e.nodeName==='SELECT' || e.nodeName==='TEXTAREA' || e.nodeName==='BUTTON') );  }
+function isTabStop(e)  {
+	var ti,
+			isI=( isInput(e)
+					 &&  !e.disabled
+					 &&  (!(ti=e.getAttribute('tabIndex')) || parseInt(ti)>=0) );
+	if (isI)  goDeep.doContinue=false;
+	return isI;  }
+function goDeep(e)  {
+	return ( //avoids inputs on non-active pickers
+	goDeep.doContinue  // note that UniDOM’s DOM-crawling methods use this property to completely terminate further searching
+	&&  (!e.disabled)  // see UniDOM.disable()
+	&&  ( e.id==""  ||  !goDeep.picker_select  ||  !UniDOM.has$Class(e, goDeep.className)
+		||  goDeep.picker_select.isChosenPicker(e) ) );  }
+function outDisabled(e) {return !e.disabled}
 
 //The functionality of the above private members is exposed here for your convenience as static functions of the Picker Class,
 // but changing these Picker properties will not effect the Picker's performance.
@@ -460,7 +460,6 @@ function registerInterfaces(element, actions, isUserdataInputType)  {  //element
 	const PickerInstance=this;
 
 	var tabbedOut, enterKeyed, selectPan, escaped;
-
 	if (isUserdataInputType)  {  // these can be focused with the mouse or the TAB key
 		UniDOM.addEventHandler(element, 'onFocus',  focusOnInterfaceElement);
 		UniDOM.addEventHandler(element, 'tabIn', tabIntoUserdataInputType);  }
@@ -601,7 +600,9 @@ function registerInterfaces(element, actions, isUserdataInputType)  {  //element
 
 
 	function focusOutOfInterfaceElement(event)  {
-		if (enterKeyed)  {enterKeyed=false;  event.target.focus();  return;}
+		if (enterKeyed)  {
+			enterKeyed=false;
+			if (Boolean.eval(event.target.getAttribute('keep-focus'), true))  {event.target.focus();  return;}  }
 		PickerInstance.setActiveInterfaceState(false, event.target);
 		if (!tabbedOut  //we can only TAB to other related InterfaceElements
 		&&  (!event.relatedTarget  //but we can click anywhere…
@@ -651,7 +652,7 @@ Picker.prototype.registerPicker=function (picker)  {
 	this.pickers.push(picker);  }
 
 
-})();  // close private namespace for Picker
+}  // close private namespace for Picker
 
 // using relaxed rules; perhaps you want to prefix "data-" to each
 SoftMoon.WebWare.Picker.ATTRIBUTE_NAMES={
