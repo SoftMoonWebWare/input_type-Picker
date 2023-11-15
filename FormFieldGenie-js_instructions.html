@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="UTF-8">
+<meta name='description' content='A JavaScript tool for multiplying HTML form inputs'>
+<meta name='author' content='Joe Golembieski, SoftMoon-WebWare'>
+<meta name='copyright' content='Copyright © 2010, 2012, 2013, 2015, 2022, 2023 Joe Golembieski, SoftMoon-WebWare'>
+<title>FormFieldGenie instructions from SoftMoon-WebWare</title>
+<link rel="icon" type="image/x-icon" href="images/SoftMoonWebWare.gif">
+<style type="text/css">
+body, header, main, section, footer, figure, div, h1, h2, h4, h5, img, ul, ol, dl, menu, li {
+	margin: 0;
+	padding: 0; }
+body {
+	min-width: 57em;
+	font-family: serif;
+	color: #000000;
+	background-color: #FFDEAD;
+	background-image:  /* SteelBlue */
+		linear-gradient(to right, #4682B4FF, 304px, #4682B400 800px),
+		linear-gradient(to bottom, #4682B4FF, 266px, #4682B400 700px),
+		linear-gradient(to top, #4682B4FF, 38px, #4682B400 100px);
+	}
+
+header h1 {
+	font-size: 1.618em;
+	font-weight: bold;
+	clear: both;
+	text-align: center;  }
+header h1:first-child {
+	font-family: sans-serif;
+	padding: .618em 1em 0 1em;
+	text-align: left; }
+header h1 span {
+	padding: 0 0 0 2.618em;
+	font-size: .764em }  /* ≈ Φ + ((1-Φ) - (1-Φ)*Φ) */
+
+header figure {
+	margin-left: .382rem;
+	float: left; }
+#logo {
+	opacity: .78;
+	font-size: 1.618em; /*for alt text*/
+	font-weight: bold;
+	line-height: 150%; }
+header figcaption {
+	font-size: 1.382em;
+	font-weight: bold;
+	text-align: center;
+	width: 27em; }
+header h1 span,
+header figcaption span {
+	display: block;
+	font-style: oblique; }
+main {
+	text-align: center; }
+main h2 {
+	margin-top: 2em; }
+main h3 {
+	margin: 0; }
+main p {
+	text-align: justify;
+	text-indent: -.618em;
+	font-size: 1.236em;
+	width: 27em;
+	margin: 0 auto 0 auto;
+	padding: 0 1em 1em 1em; }
+main p * {
+	text-indent: 0; }
+main p:first-letter {
+	font-size: 1.618em;
+	font-weight: bold;
+	color: #000040; }
+main topic {
+	font-weight: bold;
+	color: black;
+	background-color: Chartreuse; }
+main code {
+	font-style: normal; 
+}
+main p code,
+main ul code,
+main dl code {
+  white-space: nowrap;
+	background-color: #FFFFFF70; }
+main ul topic code {
+	background-color: transparent; }
+main > code,
+main ul,
+main dl {
+	margin: 0 auto 2em auto;
+	font-size: 1.236em;
+	display: block;
+	text-align: left;
+	list-style: none;
+	max-width: 47em; }
+main > code {
+	max-width: 90%;
+	background-color: white;
+	white-space: pre;
+	overflow: auto; }
+main dl ul,
+main dl dl {
+	margin: 0 auto;
+	font-size: inherit;
+	max-width: 40em; }
+main li { margin-top: .618em; }
+main ul.bulletted {
+	list-style: circle; }
+main ul.bulletted li code {
+	display: inline;
+	white-space: pre; }
+main default {
+	color: black;
+	background-color: Orange;
+	border-radius: .382em; }
+main dt {
+	margin-top: 1em;
+	font-weight: bold;
+	font-size: 116.2%;
+	font-family: monospace; }
+main dl dl dt {
+	margin: 0; }
+main dt code { /*CornflowerBlue, 38% opacity;*/
+	background-color: RGBA(100, 149, 237, 38%); }
+main p note,
+main dd em {
+	font-style: oblique;
+	color: maroon;
+	display: block; }
+main dd strong em {
+	display: inline; }
+main > .notice {
+	font-size: 1.236em; }
+main > ul + .notice {
+	margin: -1.618em auto 1em auto; }
+main .notice {
+	display: block;
+	color: #800000; }
+desc,
+rule {
+	display: block; }
+rule {
+	margin-left: 1em;
+	text-indent: -.382em; }
+
+
+footer p {
+	margin: 0 1.618em;
+	font-size: .78em;
+	font-weight: bold; }
+footer note {
+	margin-right: 2.618em; }
+footer note:last-child {
+	margin-right: 0; }
+
+abbr[tm] {
+	font-size: .763924em;
+	vertical-align: .236076em;
+	line-height: 100%; }
+code, var {
+	font-family: monospace; }
+kbd span {
+	display: inline-block;
+	position: relative;
+	top: -.162em;
+	bottom: auto;
+	border: 1px solid #8080FF;
+	border-bottom: 2px solid #404080;
+	border-right: 2px solid #404080;
+	border-radius: 1.618em / 2em;
+	color: white;
+	background-color: #202040;
+	text-align: center;
+	margin: 0 .162em;
+	padding: 0 .618em;
+	font-size: 85.4%;  }
+</style>
+<script>
+window.addEventListener('DOMready', function() {
+console.log('DOM is ready');
+	if (window.location.protocol==='file:')
+		for (const anchor of document.getElementsByTagName('a'))  {
+			if (anchor.href.startsWith('http')  ||  anchor.href.startsWith('#'))  continue;
+			anchor.href='https://softmoon-webware.com/'+anchor.href;  }  });
+</script>
+</head>
+<body>
+<header>
+<h1>Custom Web Software Development</h1>
+<figure>
+<img id='logo' src="images/SoftMoon-WebWare.gif" alt="SoftMoon-WebWare">
+<figcaption>JavaScript<abbr tm>™</abbr>, <abbr>HTML 5</abbr>, <abbr>CSS 4</abbr>, &amp; <abbr>PHP 8</abbr>:
+<span>Innovative Enterprise level Scripting for interactive sites, <acronym title='software as a service'>SaaS</acronym>, &amp; cross-platform desktop apps</span></figcaption>
+</figure>
+<?php include "SoftMoon-WebWare_header_menu.php"; ?>
+<h1>FormFieldGenie Text-Input Auto-Pop-Up</h1>
+</header>
+
+<main id='content'>
+<p>This JavaScript<abbr tm>™</abbr> powered multifunctional class allows you to create an
+end-user-manipulatable <abbr>HTML</abbr> form
+that requires an unknown number of textual-input / file-input form fields.&nbsp;
+When you don’t want to limit your visitors to a minimal number of input options,
+but don’t want your page display to be bloated with a large number of empty user-input boxes,
+this is the utility you need.&nbsp;
+An end-user can even cut, copy, and paste entire
+sections of an <abbr>HTML</abbr> form to/from multi-clip clipboards,
+if you set up your Genie and <abbr>HTML</abbr> to do so.&nbsp;
+We use this class in our
+►<a href="MasterColorPicker_instructions.php">MasterColorPicker</a> package,
+and you can see useful working integrated examples there
+(in the “MyPalette” and “Gradientor” sub-applications, and the “Color Filter” extension).</p>
+
+<p><em>¿What</em> do you use this for?&nbsp;
+When you have to ask someone to list each of something you request,
+and they may need one (1) form field, or they may need fifty (50), or anywhere in between or even more!&nbsp;
+Consider asking about someone’s children and grandchildren.&nbsp; In one family there may be two children,
+each with one grandchild.&nbsp;
+What about a large family with 7 children, each with an average of 5 grandchildren?&nbsp;
+Do you create a form that accommodates the large family, forcing the small family to wade through your web page
+like trying to navigate swamp water?&nbsp;  And what about the family with 12 children and 78 grandchildren?&nbsp;
+Of course there are functions that say &ldquo;click this button to create a new form field&rdquo;.
+Clicking once or twice may be OK.&nbsp; I've seen that approach used to upload files,
+and it annoyed me when I had to upload two dozen, simply because it broke the &ldquo;flow&rdquo; of selecting each file;
+and that was all point and click.&nbsp;
+When you have to actually type in a phrase, then switch to the mouse to click, then back to the keyboard...
+This is <strong>much</strong> easier — even when an end-user just needs to simply upload an unknown number of files.&nbsp;
+And on the back-end, the FormFieldGenie can help you <em>very simply</em> <a href='#organize_data'>organize complex data</a> sent to the server
+<em>as the end-user enters it</em>.&nbsp;</p>
+
+<p>The best way to understand this class is to exemplify it, so we created a
+►<a href="test_FormFieldGenie-js.php" target="demo">working demo</a>.&nbsp;
+You should also view the highlighted
+►<a href="code/test_FormFieldGenie-js_sourcecode.htm" target="source_code">demo source code</a>
+to understand what is happening, why and how.&nbsp;
+However, this instruction page provides a basic overall concept and details that make understanding the demo code easy.&nbsp;
+You can download the JavaScript<abbr tm>™</abbr> package from our ►<a href='OpenSource.php'>download page</a>
+or Git it from GitHub: ►<a href='https://github.com/SoftMoonWebWare/FormFieldGenie' target='github'>FormFieldGenie</a>.</p>
+
+<p>Using this class is simple and straight-forward, requiring only a few
+JavaScript<abbr tm>™</abbr> event handlers be added to the form field(s)
+you want duplicated (cloned).&nbsp;
+But it is no simple class: not only can it clone the form field
+that the event handlers are attached to, but any associated form fields, their labels,
+and any other <acronym>DOM</acronym> nodes that go along.&nbsp;
+If the said form-fields are being sent to a server, then the other primary function
+this class serves is to <strong><em>update the names</em></strong>
+of the cloned form-fields and <strong><em>keep them in order</em></strong>
+when new fields are “popped,” “pasted,” “inserted,” or “deleted”.&nbsp;
+We will attempt to explain its use in terms that
+a non-programmer can understand, so you can incorporate this class successfully in your site,
+but a basic amount of <abbr>HTML</abbr> understanding and a minimum amount of knowledge on using
+JavaScript<abbr tm>™</abbr> in your <abbr>HTML</abbr> pages is required.&nbsp;
+It has a list of options that allow you to fine-tune the way it works making it incredibly versatile.&nbsp;
+Plus it allows plug-in callback functions that allow it infinite flexibility.&nbsp;
+It intelligently updates the name associated with each form field cloned based on each individual name;
+if your given name is incompatible with this class’ capabilities, your custom plugin can handle it.</p>
+
+<h2>To create a new FormFieldGenie instance:</h2>
+<code>myGenie=new SoftMoon.WebWare.FormFieldGenie({<var>…options object…</var>}, <var>HTML_clipMenu</var>, <var>genie_name</var>);</code>
+
+<p>All parameters are optional.&nbsp;
+Jumping ahead, the <topic><code><var>genie_name</var></code></topic> is
+only used in “advanced” forms in conjunction with the <abbr>HTML</abbr> attributes
+<code>genie-tier-index</code> and <code>update-value-genie</code>.&nbsp;
+To be useful, the name should therefore be valid in an <abbr>HTML</abbr> attribute,
+so it may <strong>not contain line-endings</strong>.&nbsp;
+It may contain any textual characters <strong>except</strong> the <strong>comma <code>,</code></strong>
+(the comma is used to separate the names within the <abbr>HTML</abbr> attributes).&nbsp;
+The Genie will throw an <code>Error</code> on these illegal characters if you try to use them.&nbsp;
+Any whitespace at the beginning or end will be trimmed off and ignored,
+but whitespace in the middle is <abbr>OK</abbr>.&nbsp;
+After creating a Genie instance, you can set or change the name like in this example:&nbsp;
+<code>myGenie.name='foo'</code></p>
+
+<p>When adding a new form-field or group of form-fields (using the <code>popNewGroup()</code> method),
+the FormFieldGenie can create (clone) one based on what already exists in the form (more on that below),
+or you can explicitly give it a form-field or group of form-fields to clone.&nbsp;
+You may pass an explicit DOM node (form-field or group of form-fields) to clone
+when creating an instance of the FormFieldGenie;&nbsp; for example:</p>
+<code>myGenie=new SoftMoon.WebWare.FormFieldGenie({clone: <var>……my DOM node to clone……</var> });
+myGenie.popNewGroup(……)</code>
+
+<p>After creating an instance of the FormFieldGenie, you may also
+set the instance.config.clone (<code>myGenie.config.clone</code> in these examples) to the explicit <acronym>DOM</acronym> node
+(form-field or group of form-fields) you want to clone (if any).&nbsp;
+An example of defining an explicit node to clone:</p>
+<code>myGenie=new SoftMoon.WebWare.FormFieldGenie;
+myGenie.config.clone= <var>……my DOM node to clone……</var>
+myGenie.popNewGroup(………)</code>
+
+
+<h2>Using the FormFieldGenie</h2>
+
+<p>The first parameter passed to this class’ methods is the entire
+<acronym>DOM</acronym> Element Node you want auto-regenerated, deleted, cut, copied, inserted before, or pasted-over.&nbsp;
+A quick look at the source code of the demonstration example will help clarify this.&nbsp;
+If you only need the form field itself repeated, pass the value of <code>this</code> to the method.&nbsp;
+Remember, in an event handler for form fields, the keyword <code>this</code> refers to the
+<acronym>DOM</acronym> node of the form-field itself.&nbsp;
+If the field has a <code>&lt;label&gt;</code> Element (or any other Element) around it that you want cloned also,
+simply pass <code>this.parentNode</code>.&nbsp;
+If you want to clone a whole group of fields and associated text,
+simply repeat <code>parentNode</code> in a chain as many times as needed to move up the <acronym>DOM</acronym> tree.&nbsp;
+Alternatively, you could use the <code>.closest()</code> method of a <abbr>DOM</abbr> Element,
+perhaps relating to the class-name you assign to your group
+(see also <code>groupClass</code> in the <a href='#config_stack'>ConfigStack</a> description).&nbsp;
+<note><strong>Note</strong> that the FormFieldGenie started out as a single simple function
+back in the days of dinosaur browsers,
+when <code>focusIn</code> &amp; <code>focusOut</code> events (which do bubble) were not standard.&nbsp;
+You had to use <code>focus</code> &amp; <code>blur</code> events (which do not bubble)
+directly on the <code>&lt;input&gt;</code> ‖ <code>&lt;textarea&gt;</code> Elements,
+requiring an event-handler for each that needs to keep track of <code>parentNode</code>s and their “anscestors.”&nbsp;
+The demo (test!) example was developed then.&nbsp;
+These days you can put the event-handlers on <code>parentNode</code>s and their “ancestors”
+(as in the short simple example shown below),
+greatly simplifying the application of this class to your <abbr>HTML</abbr>.</note></p>
+
+<p>From there, the class makes one requirement:
+there must be an Element enclosing the <code><var>group</var></code> (see below) you want cloned.&nbsp;
+The clones are added into this enclosing Element.&nbsp; First, let’s be clear that <em>any</em>
+<abbr>HTML</abbr> “elements” may be used; it does not matter to the class.&nbsp;
+For the sake of discussion, we will refer to these these as follows:</p>
+<ul>
+<li>The <code>&lt;input&gt;</code> and <code>&lt;textarea&gt;</code> <acronym>DOM</acronym> <abbr>HTML</abbr> Elements themselves
+are referred to as the <topic><code><var>fieldNode</var></code></topic>
+(only <code>&lt;input&gt;</code> types that are found in the array at <code>instance.config.userDataInputTypes</code> —
+see <a href='#config_stack'>ConfigStack</a>).&nbsp;
+A <code><var>fieldNode</var></code> needs to have the proper event handlers attached;&nbsp;
+alternatively, the event-handlers may be attached to the <code><var>group</var></code> or the <code><var>batch</var></code>
+or even higher up the document hierarchy, if you manage them correctly.</li>
+<li>The entire <acronym>DOM</acronym> <abbr>HTML</abbr> Element node you want cloned
+is referred to as the <topic><code><var>group</var></code></topic>.&nbsp;
+It may be as simple as one <code><var>fieldNode</var></code>; or an Element containing one or more <code><var>fieldNode</var></code>s,
+descriptive text in a <code>&lt;label&gt;</code>, any other Elements, …whatever you need or like.</li>
+<li>The <acronym>DOM</acronym> <abbr>HTML</abbr> Element enclosing the cloned <acronym>DOM</acronym> nodes
+is referred to as the <topic><code><var>batch</var></code></topic>.&nbsp;
+It may contain any other <abbr>HTML</abbr> (that does not get cloned)
+if you use the <code>groupTag</code> or <code>groupClass</code> <a href='#config_stack'>ConfigStack</a> <a href='#options'>options</a>.</li>
+</ul>
+
+<p>In the super-simple example shown below,
+the <code>&lt;input&gt;</code> is the <code><var>fieldNode</var></code>,
+the <code>&lt;label&gt;</code> is the <code><var>group</var></code>,
+and the <code>&lt;fieldset&gt;</code> is the <code><var>batch</var></code>.&nbsp;
+The <code>&lt;legend&gt;</code> will be ignored (see more info in the next paragraph).&nbsp;
+The number <code>1</code> will be updated in the <code>&lt;input&gt;</code>’s <code>name</code> attribute
+when the <code><var>group</var></code> is cloned and the clone is added to the <code><var>batch</var></code>.&nbsp;
+This updated number will be kept in proper sequence (without gaps) with the order of <code>&lt;input&gt;</code>s in the <abbr>HTML</abbr>,
+which is generally and accordingly the sequence shown to the end-user.&nbsp;
+(Alternatively, with <abbr>PHP</abbr> at least, the name could simply be <code>user[file][]</code>
+and the FormFieldGenie will do nothing to it, because it doesn’t need to! …more on that below…)&nbsp;
+<note>Also <strong>note</strong> that the event-handlers could be moved to the <code>&lt;label&gt;</code>
+and we could then use the keyword <code>this</code> instead of <code>event.target.parentNode</code>&nbsp;
+If we keep them on the <code>&lt;fieldset&gt;</code> they could be attached using <code>addEventListener()</code>
+instead of using inline-attributes, as they will not need to be cloned;
+the <code>&lt;label&gt;</code> gets cloned, so it is easier to use inline-attributes there
+since they get cloned with the Element, whereas “attached EventListeners” do not get cloned.</note></p>
+
+<code>&lt;fieldset
+ onfocusin='myGenie.tabbedOut=false'
+ onkeydown='myGenie.catchTab(event)'
+ onfocusout='myGenie.popNewGroup(event.target.parentNode)'&gt;
+  &lt;legend&gt;select the files you want to upload&lt;/legend&gt;
+  &lt;label&gt;choose a file&lt;input type='file' name='user[file][1]'&gt;&lt;/label&gt;
+&lt;/fieldset&gt;
+</code>
+
+<p>The <code><var>batch</var></code> may contain any other <abbr>HTML</abbr> besides the clones;
+<strong>but</strong> the clones will always be added to the <code><var>batch</var></code>
+directly following the last <code><var>group</var></code>.&nbsp;
+See also the <code>config.groupClass</code> and <code>config.groupTag</code> options
+in the <a href='#config_stack'>ConfigStack</a> description below.&nbsp;
+In this example above, <code><var>instance</var>.config.groupTag='LABEL'</code> must be set.&nbsp;
+Beyond this, you are free to develop your page the way you see fit.&nbsp;</p>
+
+<p>Any time your keyboard cursor is focused on a <code><var>fieldNode</var></code> and then you leave it
+by pressing the <kbd><span>Tab</span></kbd> key or by clicking the mouse button somewhere else,
+the class looks at all the <code><var>group</var></code>s within the <code><var>batch</var></code>
+<em>that follow the “current” <code><var>group</var></code></em> (the one with keyboard focus within).&nbsp;
+If any are empty (except for the <em>last</em> one), by default it deletes them
+(you can change this default action with options;
+see <code>dumpEmpties()</code> in the <a href='#config_stack'>ConfigStack</a> description below).&nbsp;
+It then looks within the last <code><var>group</var></code> and
+by default finds the <em>first</em> text-based <code>&lt;input&gt;</code> tag
+(see <code>userDataInputTypes</code> in the <a href='#config_stack'>ConfigStack</a> description below),
+or if there are no <code>&lt;input&gt;</code>s, by default finds the <em>first</em> <code>&lt;textarea&gt;</code>,
+then looks to see if anything was typed in (or similar for <code>type='file'</code>).&nbsp;
+If this <code><var>fieldNode</var></code> has been filled by the user,
+the class &lsquo;pops’ a new <code><var>group</var></code>.</p>
+
+<p>If the end-user pressed the <kbd><span>Tab</span></kbd> key from within a <code><var>fieldNode</var></code> (to exit it)
+and a new <code><var>group</var></code> was popped, by default
+the cursor is focused within a specified <code><var>fieldNode</var></code> of the new <code><var>group</var></code>.&nbsp;
+If nothing was popped, the cursor is passed onto the next form field as usual.&nbsp;
+If the end-user (mouse-)“clicked” out of the <code><var>fieldNode</var></code>, the usual action is taken depending on where you click,
+whether or not a new <code><var>group</var></code> was popped.</p>
+
+<p>That sums up the main framework of the class.&nbsp;
+Its true power begins to shine when you look at how it updates the names associated with each
+form field cloned, and how the available options you can pass to the class can modify the default
+actions of the main framework and the process of updating the field names.&nbsp;
+This gives it the ability to work with virtually any <abbr>HTML</abbr> form of any complexity,
+and the corresponding supporting server side script.</p>
+
+<h3>Updating <code><var>fieldNode</var></code> names</h3>
+<p>When this class updates a name, it considers several things.&nbsp; Is the name indexed, or not?
+(i.e. <code>name[index]</code> or <code>name[index][index]</code> etc.)&nbsp;
+Remember in <abbr>PHP</abbr>, when a name is indexed, a “mapped-array” or nested mapped-arrays is/are created.&nbsp;
+If it is indexed, is the last index virtual (“implicit”)? (i.e. <code>name[]</code> or <code>name[index][]</code> etc.)&nbsp;
+Remember in <abbr>PHP</abbr>, when multiple form fields return the same <strong>virtual</strong> (“implicit”) indexed name
+they are automatically placed into a sequentially numbered array.&nbsp;
+The individual “indexes” in the name may be numeric, or textual; for example:
+<code>name='foo[1][bar][3][baz][7][bing][]'</code>.&nbsp;
+When multiple “indexes” are present, as in the above example,
+we are signifying “nested arrays”, and each “level” of nesting we call an <topic>“index tier”</topic>.&nbsp;
+If the field’s name is not indexed, this function considers
+whether the last characters are numeric digits, or not
+(e.g. <code>name='foo'</code> or <code>name='foo123'</code> etc.).&nbsp;
+Remember when a form returns multiple fields of the same name without using virtual (“implicit”) indexes,
+the last one overwrites all the others when using <abbr>PHP</abbr>.&nbsp;
+It should be mentioned here that if these built-in processes for updating the name don’t suit your needs,
+you may write your own plug-in that can do anything you want!&nbsp;
+(See <code>updateName()</code> in the <a href='#config_stack'>ConfigStack</a> description below.)&nbsp;
+The one other thing to be considered when updating the name is a special case involving the
+<strong>value</strong> of checkboxes and radio-buttons; this involves reasons similar to those involved when
+updating virtually indexed names, and we will take a look at this further down… … …</p>
+
+<h3 id='organize_data'>Data organization with the FormFieldGenie</h3>
+<p>Perhaps the number one (#1) most important consideration when engineering software systems is data organization.&nbsp;
+Do everything you can to <em>organize your data to serve your codebase</em>;
+<strong>don’t</strong> organize your codebase to serve your data, unless you don’t have control over the data.&nbsp;
+¡Organize your data so that your code can most easily and quickly process it, and that depends on the process!&nbsp;
+Typically, data is organized in a flat-list or a hierarchical-tree format (tables are another good example).&nbsp;
+When you create an <abbr>HTML</abbr> form to send data to a server to be processed,
+it is inherently sent by the browser to the server as a flat-list;
+each <code><var>fieldNode</var></code>’s name is paired with its value,
+and the pairs are sent sequentially.&nbsp;
+As mentioned above, the <abbr>PHP</abbr> language on a server can interpret the name sent
+and create “arrays” … and arrays nested within arrays nested with arrays…&nbsp;
+This automatically converts the flat-list data-format to a hierarchical-tree data-format
+(and that format can moonlight as a table-format if need be).&nbsp;
+Quite often, dealing with complex data is better suited to the hierarchical-tree format,
+rather that trying to coordinate a bunch of flat-lists.&nbsp;
+The FormFieldGenie was designed with the hierarchical-tree format in mind,
+by supporting “indexed names” with nested Genies…</p>
+
+<h3 id='fully_indexed_names'>Fully Indexed Names</h3>
+<p>The class by <em>default</em> looks for the <strong>last</strong> index in the name that is <strong>numeric</strong>
+and increases it by one for each new field popped.&nbsp;
+If no index is found to be numeric, the name is left unchanged.
+You can specify <strong>which</strong> index in the name gets modified with
+the <code>opts.indexTier</code> parameter, or by using an <abbr>HTML</abbr> attribute.&nbsp;
+The <code>indexTier</code> is perhaps the most important property of the <a href='#config_stack'>FormFieldGenie ConfigStack</a>,
+and you can find the technical specs behind this option in that section of these instructions.&nbsp;
+At times, you may create a form with a complex data structure,
+such that having one <code>indexTier</code> value that applies to
+all <code><var>fieldNode</var></code> names in a <code><var>group</var></code> is insufficient;
+then you use the custom HTML attribute <code>genie-tier-index</code>.&nbsp;
+This attribute allows you to specify the <code>tierIndex</code> for one or more Genies (when they are nested).&nbsp;
+Check out the example below, noting that you must <strong>not</strong> place any characters, including whitespace,
+between the Genie “names” and the following colon <code>:</code>
+but whitespace elsewhere in the attribute data-value is ignored.</p>
+
+<code>//                                           your Genie names:   ↓↓↓           ↓↓↓           ↓↓↓     
+&lt;input name='foo[1][bar][3][baz][7][bing][]' genie-tier-index='myGenie: 0, otherGenie: 1, etcGenie: -2'&gt;
+//                                                        updates:  [1] ↑          [3] ↑        [7] ↑↑
+// remember only numeric indexes in the name are “counted”
+// the default  indxTier  value of (-1) points to the numerically-implicit index  []  at the end</code>
+
+<h3>Virtually Indexed (Numerically Implicit) Names</h3>
+<p>These are names with an “empty” index-tier at the end: <code>&lt;input name='foo[bars][]'&gt;</code>
+As noted, <abbr>PHP</abbr> automatically “numbers” them into a sequential array as it receives them.&nbsp;
+There is often no need to do anything to these names,
+because the server side script (<abbr>PHP</abbr>) handles them as they should be.&nbsp;
+If your form is returning a “deep tree” of data to <abbr>PHP</abbr>
+with Genie <code>batch</code>es nested within Genie <code>batch</code>es nested within … … …,
+and you are using a name with “numeric indices” as well as the “virtual index” at the end,
+one or more Genie(s) may need to update a numeric index, while another leaves the virtual index alone.&nbsp;
+Because of this need, a virtual index is “counted” as a numeric index when using <code>opts.indxTier</code>.</p>
+
+<h3>Non-indexed Names</h3>
+<p>Non-indexed names without digits at the end are simply left alone.&nbsp;
+This is generally only useful for radio buttons or <code>&lt;button&gt;</code> Elements.&nbsp;
+Names that end in a sequence of digits have that sequence numerically increased by one for each new field popped.&nbsp;
+Pay close attention to the favorite cars example and the data it produces when the form is submitted.&nbsp;
+Note how only the last sequence of digits is increased, and the rest are left alone.</p>
+
+<h3>Special case: checkboxes and radio buttons with <topic>“numeric” <em>values</em></topic></h3>
+<p>In some cases the need arises for the <strong>value</strong> of these form fields to be updated, not the name.&nbsp;
+This exception occurs <em>sometimes</em> when you use checkboxes and radio buttons.&nbsp;
+The favorite pets section in the demonstration exemplifies this.&nbsp;
+Take a look at the source code of the demonstration example and also at the test-demo itself.&nbsp;
+Notice how the nickname section also uses checkboxes within the <code><var>group</var></code> to be cloned.&nbsp;
+If we simply clone these and leave their names unchanged,
+the resulting data no longer co-ordinates with its associate data.&nbsp;
+You get a sequential array of all the checkboxes checked by the user,
+but there is no way to tell which array element corresponds to which nickname.&nbsp;
+If an <code>&lt;input&gt;</code>’s <strong>value</strong> is a number
+it can be updated <strong>instead</strong> of the name.&nbsp;
+You can control which <code>&lt;input&gt;</code> values are updated
+by listing the specific Genie(s) that do so with an <abbr>HTML</abbr> Element attribute
+(remember, this only works with checkboxes and radio-buttons).&nbsp;
+This becomes necessary when <code><var>group</var></code>s are nested within each other.&nbsp;
+For example: <code>&lt;input type='checkbox' name='user[1][pets][favorites][]' value='0' update-value-genie='<var>thePetGenie</var>'&gt;</code>.&nbsp;
+The Genie with the name <code><var>thePetGenie</var></code> will update the value of this <code>&lt;input&gt;</code>;
+but when it updates another <code>fieldNode</code> in the <code>group</code> it is cloning,
+and said <code>fieldNode</code> has the name <code>user[1][pets][0][name]</code>,
+it will (by default with the <code>indxTier=(-1)</code>) update the <code>[0]</code> index in the name;
+furthermore, the <code>value='<var>index</var>'</code> and the <code>[<var>index</var>]</code> updated in the names
+will all have matching <code><var>index</var></code>es within the same cloned <code>group</code>
+(provided your seed-clone originally had matching <code><var>index</var></code>es).&nbsp;
+In other words, the checkbox/radio-button’s <code>value</code> will indicate the <code><var>group</var></code> it is in.&nbsp;
+The content of this <code>update-value-genie</code> attribute should be the <code><var>name</var></code> you pass into the
+FormFieldGenie constructor (you can also set it directly after you construct your Genie
+using something like: <code><var>myGenie</var>.name='foobar';</code>).&nbsp;
+If you want more than one Genie to update the checkbox / radiobutton <code>value</code>,
+specify their names in your attribute separated by commas.&nbsp;
+For this reason, your Genie name may contain any characters <strong>except the comma <code>,</code> character</strong>
+(also, whitespace is trimmed off the beginning and end of your name).&nbsp;
+Then <em>only</em> the Genie(s) you specify will update the <code>value</code>;
+other Genies that operate on your checkbox or radiobutton will update the <code>&lt;input&gt;</code>’s <code>name</code> as usual.</p>
+
+
+<h2>Coping, Cutting, Pasting, &amp; Inserting</h2>
+<p>You can paste <strong>two</strong> different ways using <strong>three</strong> different methods:</p>
+<ul class='bulletted'>
+		<li>paste over an existing <code><var>group</var></code> using <code>pasteGroup(<var>group</var>, {clip: <var>yourClipReference</var>})</code></li>
+		<li>insert a new <code><var>group</var></code> using <code>pasteGroup(<var>group</var>, {doso: 'insert', clip: <var>yourClipReference</var>})</code></li>
+		<li>insert a new <code><var>group</var></code> using <code>popNewGroup(<var>group</var>, {doso: 'paste', clip: <var>yourClipReference</var>})</code></li>
+</ul>
+<span class='notice'>( see “clip” in “<a href='#options'>options</a>” below for more info on <var>yourClipReference</var> )</span>
+<p>The difference between <code>popNewGroup()</code> and <code>pasteGroup()</code>
+is that <code>pasteGroup()</code> will return <code>false</code> if the clip is empty,
+while <code>popNewGroup()</code> will simply pop a new “blank” clone if the clip is empty.&nbsp;
+After creating an instance of the FormFieldGenie,
+the clipboard Object may be accessed through <code><var>instance</var>.clipboard</code>;&nbsp;
+each clipboard Object property may contain an individual clip (<acronym>DOM</acronym> node).&nbsp;
+For more details, see the “<a href='#options'>options</a>” description below.</p>
+
+<p>The <topic><code>HTML_clipMenu</code></topic> is passed in as the second parameter when creating an instance of the FormFieldGenie.&nbsp;
+Find it / modify it as the property: <code><var>myGenie</var>.HTML_clipMenu</code> of your FormFieldGenie instance.&nbsp;
+It should be an actual snippet of <abbr>HTML</abbr> with a specific format.&nbsp;
+In the example shown below, we would do something like:</p>
+
+<code>&lt;menu id='myGenie_popUpMenu'&gt;
+  &lt;li&gt;insert:&lt;span onclick='<var>myGenie</var>.popNewGroup(this.closest("."+<var>myGenie</var>.config.groupClass), {doso:"insert"})'&gt;empty field&lt;/span&gt;
+              &lt;ul onclick='if (event.phase===Event.BUBBLING_PHASE) <var>myGenie</var>.pasteGroup(this.closest("."+<var>myGenie</var>.config.groupClass), {doso:"insert", clip:event.target.innerText})'&gt;
+                &lt;li standard&gt;all clips&lt;/li&gt;
+              &lt;/ul&gt;&lt;/li&gt;
+  &lt;li&gt;copy to:&lt;ul onclick='if (event.phase===Event.BUBBLING_PHASE) <var>myGenie</var>.copyGroup(this.closest("."+<var>myGenie</var>.config.groupClass), {clip:event.target.innerText})'&gt;
+                &lt;li standard&gt;new clip&lt;/li&gt;
+              &lt;/ul&gt;&lt;/li&gt;
+  &lt;li&gt;cut to:&lt;ul onclick='if (event.phase===Event.BUBBLING_PHASE) <var>myGenie</var>.cutGroup(this.closest("."+<var>myGenie</var>.config.groupClass), {clip:event.target.innerText})'&gt;
+                &lt;li standard&gt;new clip&lt;/li&gt;
+              &lt;/ul&gt;&lt;/li&gt;
+  &lt;li&gt;paste from:&lt;ul onclick='if (event.phase===Event.BUBBLING_PHASE) <var>myGenie</var>.pasteGroup(this.closest("."+<var>myGenie</var>.config.groupClass), {clip:event.target.innerText})'&gt;
+                &lt;/ul&gt;&lt;/li&gt;
+  &lt;li onclick='if (confirm("Do you want to delete this group?")) <var>myGenie</var>.deleteGroup(this.closest("."+<var>myGenie</var>.config.groupClass))'&gt;delete&lt;/li&gt;
+  &lt;li onclick='<var>myGenie</var>.clearClipboard();'&gt;clear clipboard&lt;/li&gt;
+&lt;/menu&gt;
+&lt;script&gt;myGenie=new SoftMoon.WebWare.FormFieldGenie({<var>…options…</var>}, document.getElementById('myGenie_popUpMenu'));&lt;/script&gt;
+</code>
+
+<p>This option is used when you want to allow your end-users the ability to cut/copy/paste/delete
+entire form sections (<code><var>group</var></code>s — when copied/cut we call them “clips”)
+and the “menu” would look something like the example above, but customized to your specific needs.&nbsp;
+Note that the <code>standard</code> attribute signifies <code>&lt;li&gt;</code> Elements in the menu that do not get deleted.&nbsp;
+The FormFieldGenie will update this HTML menu by automatically adding/deleting <code>&lt;li&gt;</code> Elements that reference copied/cut “clips.”</p>
+
+<p>You may copy and paste this snippet of HTML shown above into your web-page – one copy per Genie instance.&nbsp;
+You may change/add any <code>id</code> or <code>class</code> names to this HTML for CSS handles.&nbsp;
+The <code><var>myGenie</var></code> variable should be changed to the name of the variable that you use for your specific Genie
+(multiple Genies require multiple variables and multiple <code>HTML_clipMenu</code>s).&nbsp;
+Remember, the first parameter passed into the Genie methods is the “current” <code><var>group</var></code>.&nbsp;
+The example above <em>assumes</em> you are using the <code>groupClass</code> option (see <a href='#config_stack'>ConfigStack</a> below);
+maybe you should use the <code>groupTag</code> option, or perhaps better yet,
+just hard-code the <code>.closest()</code> spec into your script.&nbsp;
+You may simply modify the <code>&lt;li&gt;TEXT&lt;/li&gt;</code> in the outer <code>&lt;menu&gt;</code> but not the inner <code>&lt;ul&gt;</code>s.&nbsp;
+For instance, with a list of names, your <code>TEXT</code> may become: “insert name”, “copy name”, “cut name”, “paste name”, “delete name”,
+and your confirm dialog may become “Do you want to delete this name?”.&nbsp;
+The <code>&lt;li&gt;TEXT&lt;/li&gt;</code> in the inner <code>&lt;ul&gt;</code>s may be modified
+only if you modify or replace the <code>FormFieldGenie.TEXT</code> Object,
+or rewrite the JavaScript<abbr tm>™</abbr> that defines the <code>clip: … … …</code> value passed to the Genie.&nbsp;
+Note the <code>FormFieldGenie.TEXT</code> Object is static to the class:
+you don’t find it as a property of your Genie instance, rather it applies to <strong>all</strong> Genies;
+find it at <code>SoftMoon.WebWare.FormFieldGenie.TEXT</code>.&nbsp;
+Modify it for other languages or for more “specific” references in your application.&nbsp;
+The FormFieldGenie will add clip references to the menu that look like these examples:
+“clip 1”, “clip 2”, “clip 3”, etc.&nbsp;
+Using the <code>FormFieldGenie.TEXT</code> Object, you can modify the word “clip” to the word (or language) you desire.&nbsp;
+Embedded JavaScript<abbr tm>™</abbr> event-handler attributes may also be modified and/or expanded as appropriate to your needs.&nbsp;
+When the menu is updated, all <code>&lt;li&gt;</code> Elements that reference copied/cut “clips” are deleted,
+and then the menu is rebuilt from scratch.&nbsp;
+After the menu is updated, a custom <code>'ffgeniemenuupdate'</code> event is fired on the <code>HTML_clipMenu</code>
+so you can further customize the update if needed.&nbsp;
+If you need event-handlers directly on the auto-generated <code>&lt;li&gt;</code> Elements that reference copied/cut “clips,”
+you will have to use this custom event and then attach your events to these <code>&lt;li&gt;</code> Elements
+using <code><var>element</var>.attachEventListener()</code> or by setting their attributes.&nbsp;
+As an example of a difference, you may want the end-user to double or even triple-click to delete, and then do it with no confirmation:
+<code>onclick='if (event.detail===3) myGenie.deleteGroup(this.closest("."+myGenie.config.groupClass))'</code>.&nbsp;
+The Genie itself will confirm if you want to clear the whole clipboard unless you auto-confirm using <code>.clearClipboard(true)</code></p>
+
+<p>Note that using the <code>HTML_clipMenu</code> is not required to cut/copy/paste/delete using the Genie;
+but if you do inform the Genie of this menu’s existence, it will update it automatically for you.&nbsp;
+This menu interfaces with the Genie’s innate ability to handle a “multi-clip” clipboard;
+but you don’t need to integrate the “multi-clip” functionality in your project.&nbsp;
+Perhaps you only want to allow your end-users to cop/cut/paste into a “single-clip” clipboard
+so they don’t get confused, or for a smaller menu with a smaller footprint on the screen, or for whatever reason.&nbsp;
+Perhaps then you need a simple “pop-up” menu like the one shown below.&nbsp;
+(¡Note again that we are <em>assuming</em> the use of the <code>groupClass</code> option like the above example!)&nbsp;
+The <code>TEXT</code> in this demo example menu below is meaningless to the Genie and you may change it to anything you like.&nbsp;
+Note that we <strong>don’t</strong> specify the “clip” instead of calculating it like in the above example demo menu;
+the Genie will use the <code>_system_</code> clip spec as defined in the <a href='#config_stack'>ConfigStack</a> prototype.&nbsp;
+Moreover, We tried <strong>not</strong> to box you in as a developer.&nbsp;
+By simplifying the cut/copy/paste menu as shown below, it could be used with may different <code>batch</code>es
+using the same Genie in each <code>batch</code>, but using a different “clip” spec for each <code>batch</code>;
+perhaps then you would add to the imbedded JavaScript<abbr tm>™</abbr> something like
+<code>{clip: this.closest(".genie-batch").getAttribute("clip-spec")}</code></p>
+
+<code>&lt;menu id='myGenie_simpleMenu'&gt;
+  &lt;li onclick='<var>myGenie</var>.copyGroup(this.closest("."+<var>myGenie</var>.config.groupClass))'&gt;copy section&lt;/li&gt;
+  &lt;li onclick='<var>myGenie</var>.cutGroup(this.closest("."+<var>myGenie</var>.config.groupClass))'&gt;cut section&lt;/li&gt;
+  &lt;li onclick='<var>myGenie</var>.pasteGroup(this.closest("."+<var>myGenie</var>.config.groupClass))'&gt;paste copied/cut section&lt;/li&gt;
+  &lt;li onclick='<var>myGenie</var>.pasteGroup(this.closest("."+<var>myGenie</var>.config.groupClass), {doso:"insert"})'&gt;insert copied/cut section&lt;/li&gt;
+  &lt;li onclick='<var>myGenie</var>.popNewGroup(this.closest("."+<var>myGenie</var>.config.groupClass), {doso:"insert"})'&gt;insert new section&lt;/li&gt;
+  &lt;li onclick='<var>myGenie</var>.deleteGroup(this.closest("."+<var>myGenie</var>.config.groupClass))'&gt;delete section&lt;/li&gt;
+&lt;/menu&gt;</code>
+
+<p>The way the embedded JavaScript<abbr tm>™</abbr> is written in <strong>both</strong> of these “menu” examples,
+your webpage JavaScript<abbr tm>™</abbr> code should further manage this <abbr>HTML</abbr> menu,
+typically moving it “into” the <code><var>group</var></code> <abbr>HTML</abbr>
+when the end-user either •right-clicks (menu-clicks) in said <code><var>group</var></code> or
+•presses the “menu” key (looks kinda like this: <kbd><span>≡</span></kbd> when it is present on the keyboard)
+and keyboard-focus is “in” a <code>fieldNode</code> within said <code>group</code>,
+and style it with <abbr>CSS</abbr> so it “pops-up” (appears) at the right place at that time.&nbsp;
+It would typically need additional Event handlers so it “pops down” (disappears) when a selection is made;
+and/or Event-handlers attached to the body to do the same thing if clicked elsewhere,
+or another form-field somewhere else gets focus, etc.&nbsp;
+Technically speaking, you should also include full
+<a href='https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-haspopup' target='Mozilla'><abbr>ARIA</abbr> <code>haspopup</code></a>
+support, but implementing all that is beyond the scope of these instructions.</p>
+
+
+<h2>The publicly accessible <topic>properties</topic> of a FormFieldGenie instance are:</h2>
+<dl>
+	<dt>.config</dt>
+		<dd>An instance of a <a href='#config_stack'>FormFieldGenie.ConfigStack</a>.&nbsp;
+		This holds all the configuration values for a FormFieldGenie instance.&nbsp;
+		You can <code>myGenie.config.stack()</code> a new set of values (of your choice) onto the stack to temporarily change them,
+		then <code>myGenie.config.cull()</code> off those modifications to restore the configuration to the previous values.&nbsp;
+		Any time you pass an <var>opts</var> (options) object to any method, those options are temporarily stacked
+		onto this stack while the method is operating.</dd>
+	<dt>.clipboard</dt>
+		<dd>This holds all the clipboard data for your Genie instance.</dd>
+	<dt>.HTML_clipmenu</dt>
+		<dd>This points to the <abbr>HTML</abbr> that is the “menu” shown to the end-user
+		with the <strong>“multi-clip”</strong> clipboard data for your Genie instance.&nbsp;
+		If you are not implementing a “multi-clip” interface, this property should be <code>undefined</code>.</dd>
+	<dt>.name</dt>
+		<dd>The name of your specific Genie.&nbsp;
+		It may not contain the comma <code>,</code> character or line-endings.&nbsp;
+		Whitespace at the beginning and end will be trimmed off.</dd>
+	<dt>.tabbedOut</dt>
+		<dd>this <code>Boolean</code> value indicates if the end-user pressed the <kbd><span>Tab</span></kbd> key to exit a form field.</dd>
+</dl>
+
+<h2>The publicly accessible <topic>user methods</topic> of a FormFieldGenie instance are:</h2>
+<dl>
+	<dt>popNewGroup(group, opts)</dt>
+		<dd>Returns <code>true</code> if a new <code><var>group</var></code> is ‘popped’ or <code>false</code> if not.</dd>
+	<dt>deleteGroup(group, opts)</dt>
+		 <dd>Returns <code>true</code> if the <code><var>group</var></code> was deleted, <code>false</code> if not.</dd>
+	<dt>cutGroup(group, opts)</dt>
+		 <dd>Returns <code>true</code> if the <code><var>group</var></code> was deleted, <code>false</code> if not.<br>
+			<code><var>group</var></code> will always be copied to the clipboard.</dd>
+	<dt>copyGroup(group, opts)</dt>
+		 <dd>Returns <code>null</code>.<br>
+		 <code><var>group</var></code> will always be copied to the clipboard.</dd>
+	<dt>pasteGroup(group, opts)</dt>
+		 <dd>Returns <code>false</code> if the clipboard clip is empty, <code>true</code> if it is pasted.</dd>
+	<dt>clearClipboard(confirmed)</dt>
+		 <dd>Does what it says.&nbsp;
+		 It will manually confirm with the end-user if you don’t pass <code>true</code> for <code><var>confirmed</var></code>.</dd>
+	<dt>getClip(clipID, doInit)</dt>
+		 <dd>This method is also called internally by other user-methods as a worker-method, but you may utilize it if manually working with the clipboard.</dd>
+	<dt>update_HTML_clipMenu()</dt>
+		 <dd>This method is also called internally by other user-methods as a worker-method, but you may utilize it if manually updating the clipboard.</dd>
+</dl>
+
+<h2>The publicly accessible (and user-replaceable) <topic>worker-methods</topic> of a FormFieldGenie instance are:</h2>
+<dl>
+	<dt>isActiveField(fieldNode, cbParams)</dt>
+		<dd>This is called internally by user methods.&nbsp;
+		You can replace it using something like: <code>myGenie.isActiveField=function(fieldNode, cbParams)  { /*…your customizing code…*/ }</code>
+		The standard function also recognizes <code>myGenie.config.isActiveField</code> which may be a function or Boolean value.&nbsp;
+		This can replace the standard function to check if a form field is currently active or not;
+		i.e. is it disabled, or is it even displayed at all?&nbsp;
+		You may add/subtract your own rules, perhaps checking the status of another element.&nbsp;
+		Inactive elements will not be considered when deciding to pop a new group or dump an empty one.&nbsp;
+		The <var>cbParams</var> variable is the user’s call-back parameters
+		(see <code>cbParams</code> below in the <a href='#config_stack'>ConfigStack</a> description below).&nbsp;
+		Your function should return <code>true‖false</code>.</dd>
+	<dt>catchTab(event)</dt>
+		<dd>This is to be utilized (called by) by your “onKeyDown” event handler.&nbsp;
+		It can also <strong><em>be</em></strong> the “onKeyDown” event handler if you attach it using <code>Element.addEventListener()</code>
+		as opposed to the handler being an Element's attribute.</dd>
+	<dt>catchKey(event)</dt>
+		<dd>This is <strong><em>not</em></strong> defined natively, but is recognized by the standard
+		<code>catchTab()</code> method of an instance.&nbsp;
+		Since the form field that the event-handler (i.e. <code>catchTab()</code>, which calls this method) is attached to is likely to be cloned,
+		it is easier to attach event-handlers “inline”, i.e. a part of the HTML tag as an “onkeydown” attribute
+		(e.g. <code>&lt;input type='text' onkeydown='myGenie.catchTab(event)'&gt;</code>),
+		so said attribute that leads to calling this method is inclusively cloned,
+		rather than using “unobtrusive” JavaScript<abbr tm>™</abbr> <code>addEventListener()</code> methods every time the form field is cloned.&nbsp;
+		This conception, however, limits you to only one (1) “onkeydown” event handler,
+		so the “catchKey” hook is internal to allow you to “use” additional “onkeydown” handlers without having to add them to the element.&nbsp;
+		Alternatively, you may utilize the “<code>myGenie.config.eventRegistrar()</code>” functional option (see the ConfigStack options below)
+		to add on a handler that calls this method, or any additional handlers, to newly cloned form fields as needed.</dd>
+</dl>
+
+<h2 id='config_stack'>The publicly accessible properties and <default>default values</default>
+of a <topic>FormFieldGenie.ConfigStack</topic> (myGenie.config) instance are:</h2>
+
+<dl>
+	<dt>indxTier: <var>integer-number</var> <default>-1</default></dt>
+		<dd>Number of <strong>numeric</strong> index “tiers” to ignore counting from the beginning or end of a name;
+		used to specify the specific tier when updating names.&nbsp;
+		Positive (+<var>n</var>) and zero (0) values skip over tiers starting from the beginning of the name progressing forwards (i.e. a zero-based count),
+		while negative (−<var>n</var>) values count tiers starting from the end of the name progressing backwards (i.e. a −1 based count).&nbsp;
+		Example:  name → <code>myField[4][3][2]</code> when <code>indxTier=-3</code> the FormFieldGenie updates/modifies the index that contains “4”
+		and when <code>indxTier=1</code> the FormFieldGenie  updates/modifies the index that contains “3”.&nbsp;
+		The Genie looks for the <strong>numeric</strong> indexes, so note the following
+		example:  name → <code>myField[4][subsection][3][2]</code>  when <code>indxTier=2</code> the FormFieldGenie updates/modifies the index that contains “2”;
+		the “subsection” tier is ignored.&nbsp;
+		A virtual (“numerically implicit”) index at the end of the name is included in the “count,”
+		so with a name like <code>myField[4][]</code>,
+		the <code>indxTier</code> values of “<code>0</code>” and  “<code>-2</code>” both point to the <code>[4]</code> index,
+		while  “<code>1</code>” and  “<code>-1</code>” both point to the virtual <code>[]</code> index.&nbsp;
+		The FormFieldGenie does nothing to the name when a virtual <code>[]</code> index is pointed to by the <code>indxTier</code>.&nbsp;
+		You can override this spec using attributes in your <code><var>fieldNode</var></code>;
+		see <a href='#fully_indexed_names' >Fully Indexed Names</a> above.</dd>
+
+	<dt>focusField: <var>0 +number</var> <default>0</default></dt>
+		<dd><em>This applies to <code>pasteGroup()</code> and <code>popNewGroup()</code> only.</em>
+		Pass the field number (counted from <strong><em>zero</em></strong>)
+		of the text/filename field you want the cursor focused on,
+		<strong>if</strong> the user pressed the <kbd><span>Tab</span></kbd> key
+		or <code>config.doFocus=true</code> (see directly below),
+		when popping or when pasting a new group.</dd>
+
+	<dt>doFocus: <code>true ‖ false ‖ <default>null</default></code></dt>
+		<dd><em>This applies to <code>pasteGroup()</code> and <code>popNewGroup()</code> only.</em>
+		If <code>true</code>, the <code>focusField</code> (see directly above)  will receive focus,
+		whether or not the <kbd><span>Tab</span></kbd> key was pressed.&nbsp;
+		If <code>false</code>, the <code>focusField</code> will not receive focus when the <kbd><span>Tab</span></kbd> key is pressed.&nbsp;
+		If <code>null</code>, then the <kbd><span>Tab</span></kbd> key will cause the <code>focusField</code> to receive focus
+		when popping a new <code><var>group</var></code>.</dd>
+
+	<dt>isActiveField: <code><default>undefined</default> ‖ true ‖ false ‖
+	function(groupInQuestion, cbParams) { /*…your custom code makes the distinction…*/ }</code></dt>
+		<dd>This works in conjunction with the <code>isActiveField()</code> <strong>method</strong> of a FormFieldGenie instance.&nbsp;
+		If <code>true</code>, all form fields will be considered active; if <code>false</code> they will not.&nbsp;
+		If this value is a user-defined function, its Boolean return value will be respected.&nbsp;
+		The <code>cbParams</code> variable is the user’s options (see below).</dd>
+
+	<dt>dumpEmpties: <code><default>dumpEmpties()</default> ‖ true ‖ false ‖
+	function(empty_groupInQuestion, deleteFlag) { /*…your custom code makes the distinction…*/ }</code></dt>
+		<dd>Remove emptied groups on the fly?
+		<em>This applies to <code>deleteGroup()</code> and <code>popNewGroup()</code> only, and not when inserting or pasting.</em>
+		The supplied default function utilizes the <code>minFields</code>, <code>groupTag</code>, &amp; <code>groupClass</code>
+		ConfigStack values (see below) to make the distinction.&nbsp;
+		If a function is supplied, it should return <code>true ‖ false ‖ null</code>
+		and if <code>null</code> is returned, the function should remove the field itself.&nbsp;
+		If you use <code>deleteGroup()</code>, the <code><var>group</var></code> will be removed
+		even if <code>dumpEmpties===false</code>;&nbsp;
+		however, if <code>dumpEmpties</code> is a function, it will be called with the value of
+		<code>deleteFlag=true</code> as its second parameter
+		and its return value (<code>true‖false</code>) will be respected.
+		</dd>
+
+	<dt>minGroups: <var>+number</var> <default>1</default></dt>
+		<dd>Min number of “groups” when checking to dump empties
+		using the standard <code>dumpEmpties()</code> function (see directly above).</dd>
+
+	<dt>maxGroups: <var>+number</var> <default>100</default></dt>
+		<dd>Maximum number of clones (<code><var>group</var></code>s) in the <code><var>batch</var></code>.</dd>
+
+	<dt>groupClass: <var>string ‖ RegExp</var> <default>""</default></dt>
+		<dd>This is used to identify <strong>specific</strong> child-Elements in a <code><var>batch</var></code> that are <code><var>group</var></code>s.&nbsp;
+		If it is undefined, all children of the <code><var>batch</var></code> are <code><var>group</var></code>s if they match the <code>ConfigStack.groupTag</code>.</dd>
+
+	<dt>groupTag: <code>htmlTagNameString.toUpperCase() ‖ <default>null</default></code></dt>
+		<dd>This is used to identify <strong>specific</strong> child-Elements in a <code><var>batch</var></code> that are <code><var>group</var></code>s.&nbsp;
+		If it is undefined, all children of the <code><var>batch</var></code> are <code><var>group</var></code>s if they match the <code>ConfigStack.groupClass</code>.</dd>
+
+	<!--  dt>nodeName: <default>null</default></dt>
+		<dd>Specific nodeName of <code><var>fieldNode</var></code> Elements to check for being “empty” when checking to dump empties
+		using the standard <code>dumpEmpties()</code> function (see directly above).&nbsp;
+		Remember, in JavaScript<abbr tm>™</abbr> node names are in all UPPERCASE.</dd  -->
+
+	<dt>checkForFilled: <code>"all" ‖ "some" ‖ "any" ‖ <default>"one"</default></code></dt>
+		<dd><em>This applies to <code>deleteGroup()</code> and <code>popNewGroup()</code> only, and <strong>not</strong> when inserting or pasting.</em>
+		If set, the corresponding specified input-fields in the <code><var>group</var></code> will be checked.&nbsp;
+		By default only the <strong><em>first</em></strong> one is checked.&nbsp;
+		If <code>one</code> or <code>some</code> or possibly <code>any</code>, the <code>checkField</code> option (see below) should be used also.
+		<dl>
+				<dt>'one'</dt>
+				<dd><desc>the “specified field” is indexed by <code>checkField</code></desc>
+					<rule>if the one specified field is full, a new group is popped.</rule>
+					<rule>if the one specified field is empty, the group may be dumped (automatically deleted).</rule></dd>
+				<dt>'any'</dt>
+				<dd><desc>the “specified fields” are either all of the fields in the group,
+					or if <code>checkField</code> is an array, it should contain the numeric indices of the fields</desc>
+					<rule>if any one of the specified fields is full, a new group is popped.</rule>
+					<rule>if all of the specified fields are empty, the group may be dumped (automatically deleted).</rule></dd>
+				<dt>'some'</dt>
+				<dd><desc>each of the -first- "checkField" number of fields specified will be checked,
+					or if <code>checkfield</code> is an array, it should contain the numeric indices of the fields</desc>
+					<rule>if all of the specified fields are full, a new group is popped.</rule>
+					<rule>if all of the specified fields are empty, the group may be dumped (automatically deleted).</rule></dd>
+				<dt>'all'</dt>
+				<dd><rule>if all of the fields in the group are full, a new group is popped.</rule>
+					<rule>if all of the fields in the group are empty, the group may be dumped (automatically deleted).</rule></dd>
+		</dl></dd>
+
+	<dt>checkField: <var>0, +number</var> ‖ <var>Array</var> <default>0</default></dt>
+		<dd><em>This applies to <code>deleteGroup()</code> and <code>popNewGroup()</code> only, and <strong>not</strong> when inserting or pasting.</em>
+		Used in conjunction with <code>checkForFilled</code> (see above).
+		<ul>
+			<li><desc>if checkField is a number (when <code>checkForFilled</code> = 'one' ‖ 'some')</desc>
+				<rule>Pass the field number (counted from <strong><em>zero</em></strong>)
+				of the field or fields you want checked for being “empty” when popping.&nbsp;
+				If <code>checkForFilled='some'</code> then each of the first <var>number</var> of fields will be checked.</rule></li>
+			<li><desc>if checkField is an Array (when <code>checkForFilled</code> = 'any' ‖ 'some')</desc>
+				<rule>The array should contain numeric values that are the indices of the fields to check.&nbsp;
+				The fields are indexed (starting with <strong><em>0</em></strong>) in the order that they appear in the <abbr>HTML</abbr> document.</rule></li>
+		</ul>
+		</dd>
+
+	<dt>cbParams:<var>variable</var> <default>undefined</default></dt>
+		<dd>This is a user-defined object/value of any type.&nbsp;
+		This property is not defined (e.g. <code>(cbParams in myGenie.config)===false)</code>) unless defined by the user.&nbsp;
+		This will be passed through to the <code>updateName</code> plugin callback function as the fourth variable (<var>cbParams</var>),
+		and to the <code>isActiveField</code>†, <code>cloneCustomizer</code>‡, <code>eventRegistrar</code>‡ and <code>batchCustomizer</code>‡
+		plugin callback functions as the †second or ‡third.&nbsp;
+		It may be any type as required by your plugin callback functions,
+		but if they share you may want to use an object with separate properties.</dd>
+
+	<dt>updateName: <code><default>null</default> ‖ function(field, indxOffset, group, batch, cbParams)  { /*your plugin code*/ }</code></dt>
+		<dd>A plugin callback function to handle the process of updating each name.&nbsp;
+		The function will be passed each individual form <abbr>DOM</abbr> object
+		(<code>&lt;input&gt;</code> or <code>&lt;textarea&gt;</code> or <code>&lt;select&gt;</code> or <code>&lt;button&gt;</code>)
+			one at a time in the <code>field</code> variable.&nbsp;
+		The <code>indxOffset</code> variable contains the numerical positional offset
+			of the new <code>field</code> compared to the <code>field</code> passed in.&nbsp;
+		The <code>cbParams</code> variable is the user’s options (see above).
+		The Function should pass back a string of the new name, or <code>null</code>.
+		If a string is returned, the name attribute of the <abbr>DOM</abbr> object will be set to that value;
+			no need for your function to alter the name directly, unless returning <code>null</code>.
+		If <code>null</code> is returned, the usual process of updating the name continues.&nbsp;
+		The <code>updateName()</code> function may do anything it needs from partial updating the name directly
+		(to be continued by the usual process), to updating the <code>value</code>, to updating the parentNode text, or whatever you can imagine…</dd>
+
+	<dt>cloneCustomizer: <code><default>null</default> ‖ function(group, pasteOver, cbParams)  { /*your customizing code*/ }</code></dt>
+		<dd>If there is something special you want to do to each nodeGroup cloned, you may pass a function to handle that.&nbsp;
+		All field names will have been updated, but the node will not yet have been added to the document.&nbsp;
+		The passed variable <code>pasteOver</code> will be (<code>true ‖ false ‖ 'paste-over'</code>)&nbsp;
+		—&nbsp; <code>true</code> if pasting <strong><em>and</em></strong> inserting,
+		<code>'paste-over'</code> if pasting <strong><em>over</em></strong> an existing <code><var>group</var></code> (the old existing one will be discarded).&nbsp;
+		The <code>cbParams</code> variable is the user’s call-back parameters (see <code>cbParams</code> above).&nbsp;
+		This Function is called only when a new <code><var>group</var></code> is being popped or pasted over.</dd>
+
+	<dt>eventRegistrar: <code><default>null</default> ‖ function(group, pasteOver, cbParams)  { /*your customizing code*/ }</code></dt>
+		<dd>While <abbr>HTML</abbr> attributes including event handlers are cloned when a <acronym>DOM</acronym> node is cloned,
+		<abbr>DOM</abbr> level 2+ event handlers are <strong>not</strong> cloned.&nbsp;
+		If you need event handlers registered for any elements in your cloned group,
+		you must do them “by hand” through this function.&nbsp;
+		The function will be passed the <code><var>group</var></code> <strong>after</strong> it has been added to the document.&nbsp;
+		See <code>cloneCustomizer</code> (above) for info on <code>pasteOver</code> and <code>params</code>.&nbsp;
+		This Function is called only when a new <code><var>group</var></code> is being popped or pasted over.</dd>
+
+	<dt>batchCustomizer: <code><default>null</default> ‖ function(batch, pasteOver, cbParams)  { /*your customizing code*/ }</code></dt>
+		<dd>This is called when a new group is being popped, pasted,
+		or when a group is deleted or was empty and has been dumped.&nbsp;
+		It is called from a <code>setTimeout()</code> function, so the <abbr>DOM</abbr> will be fully updated.&nbsp;
+		Use it to do any final customizing.&nbsp;
+		Note it is passed the <strong>whole</strong> <code><var>batch</var></code> node containing all <code><var>group</var></code>s
+		including the new one after it has been added to the document, not simply the newly cloned group.&nbsp;
+		See <code>cloneCustomizer</code> (above) for info on <code>pasteOver</code> and <code>params</code>.</dd>
+
+	<dt>minPixWidth: <var>0, +number</var> <default>4</default></dt>
+		<dd>for an input to be "active"</dd>
+
+	<dt>minPixHeight: <var>0, +number</var> <default>4</default></dt>
+		<dd>for an input to be "active"</dd>
+
+	<dt>clone: <var>HTMLElement</var> <default>null</default></dt>
+		<dd>This is the Node (including children) that will be cloned when popping a new field/fieldset.&nbsp;
+		If <code>null</code> then the last <code><var>group</var></code> will be cloned instead.</dd>
+
+	<dt>clip: <var>string</var> <default>"_system_"</default></dt>
+		<dd>Used if you cut/copy/paste w/out specifying the clipboard “clip” name.&nbsp;
+		See <code>clip</code> in the <a href='#options'>options</a> section below for more information.</dd>
+
+	<dt>only_clips_inAll: <code><default>true</default> ‖ false</code></dt>
+		<dd>When using <code>Genie.getClip('all clips')</code>, ¿ only return the <code>clipboard.clips</code> array ?
+		<abbr title='versus'>vs.</abbr> said array with the other properties of <code>clipboard</code> appended.&nbsp;
+		This is an advanced feature.</dd>
+
+	<dt>no_system_inAllClips: <code><default>true</default> ‖ false</code></dt>
+		<dd>When using <code>Genie.getClip('all clips')</code>, ¿ avoid clips in <code>clipboard</code> with names that contain “<code>_system_</code>” ?&nbsp;
+		This does <strong>not</strong> apply to clips in the <code>clipboard.clips</code> array.&nbsp;
+		This is an advanced feature.</dd>
+
+	<dt>userDataInputTypes: <default>['text', 'search', 'tel', 'url', 'email', 'password', 'datetime', 'date',
+	'month', 'week', 'time', 'datetime-local', 'number', 'color', 'file']</default></dt>
+		<dd>An array that specifies which <code>&lt;input&gt;</code> “types” the FormFieldGenie recognizes
+		as having values defined by the user.</dd>
+</dl>
+
+<h2 id='options'>Passing Options to the FormFieldGenie</h2>
+
+<p>Passing options to this class is simple: use an object with properties named accordingly.&nbsp;
+Any properties may be included or not, making it simple to control any option without worrying about the others.&nbsp;
+If you are not so familiar with JavaScript<abbr tm>™</abbr>, pay close attention to the
+demonstration example and how to define an object right in the event handler text.&nbsp;
+You can also define your object in a separate <code>&lt;script&gt;&lt;/script&gt;</code>,
+then simply pass it to the class by name.&nbsp; If you don’t understand how to do this,
+please refer to a good book on JavaScript<abbr tm>™</abbr> programming.</p>
+
+<p>Options may be defined or passed at three levels: global defaults, instance defaults, and when calling a method.&nbsp;
+The FormFieldGenie class’ methods, <code>popNewGroup()</code>, <code>cutGroup()</code>, <code>copyGroup()</code>,
+<code>pasteGroup()</code>, and <code>deleteGroup()</code>, only take two parameters
+(the <code><var>group</var></code> and the <code>opts</code> options object).&nbsp; By setting the option values of the
+<code>FormFieldGenie.ConfigStack.prototype</code> property, you can control the option defaults globally.&nbsp;
+When creating an instance (<code>myGenie = new&nbsp;SoftMoon.WebWare.FormFieldGenie( { ...options... } )</code>)
+you can override the global defaults, and when calling instance methods you can override the instance defaults.&nbsp;
+However, some options only apply to specific methods <strong>as they are being called</strong>;
+any similar option in the <a href='#config_stack'>ConfigStack</a> will be ignored.</p>
+
+<p>The <topic>options</topic> object may contain any properties found in the <a href='#config_stack'><code>FormFieldGenie.ConfigStack</code></a>
+(others will be ignored).&nbsp;
+Some (as noted) will be ignored if passed when creating a new FormFieldGenie instance
+and are only valid when calling a method;
+those “methodical” properties are noted below:</p>
+<dl>
+	<dt>doso: <code>true ‖ 'insert' ‖ 'paste'</code></dt>
+		<dd><em>This applies to popNewGroup() and pasteGroup() only.</em>
+		If you pass (Boolean) <code>true</code> when using popNewGroup(),
+		a new <code><var>group</var></code> will be popped at the end of the <code><var>batch</var></code>
+		regardless of whether the last <code><var>group</var></code> is empty;&nbsp;
+		but not exceeding <code>maxGroups</code>.&nbsp;
+		Empty <code><var>group</var></code>s may be removed as usual.&nbsp;
+		Empty <code><var>group</var></code>s will <strong><em>not</em></strong> be
+		automatically removed if <code>"insert"</code> when using popNewGroup().&nbsp;
+		If you pass <code>"insert"</code> or <code>"paste"</code> when using popNewGroup(),
+		a new field will be popped and inserted
+		<strong><em>before</em></strong> the passed <code><var>group</var></code>,
+		regardless of whether the last field is empty; but not exceeding <code>maxGroups</code>.<br>
+		With <code>popNewGroup()</code>, “insert” inserts an empty group.<br>
+		With <code>pasteGroup()</code>, “insert” inserts the selected clip.<br>
+		With <code>popNewGroup()</code>, “paste” inserts the selected clip.</dd>
+
+	<dt>addTo: <code>true</code></dt>
+		<dd><em>This applies to popNewGroup() and pasteGroup() only.</em>
+		If you pass <code>opts.addto=true</code>, then the value that would be passed into <code>popNewGroup()</code> as
+		<code><var>group</var></code> will be instead considered the <code><var>batch</var></code>.&nbsp;
+		This will allow you to add a new <code><var>group</var></code> to an empty <code><var>batch</var></code>
+		but only if •the <code>myGenie.config.clone</code> is set; •or <code>opts.doso='paste'</code> while the clipboard has contents.&nbsp;
+		Passing <code>opts.addto=true</code> acts similar as passing <code>opts.doso=true</code> in that it will always pop a new field
+		(unless as noted above the <code><var>batch</var></code> is empty and there is no clone and no paste).&nbsp;
+		Note that <code>pasteGroup()</code> with <code>opts.doso='insert'</code> internally calls calls <code>popNewGroup()</code>,
+		and this option may then take effect.</dd>
+
+	<dt>clip: <var>number</var> ‖ <var>string</var></dt>
+		<dd>Object-member/property-identifier — ( a.k.a. <var>yourClipReference</var> )<br>
+		This is a reference to the member or property of the clipboard object associated with an instance of the FormFieldGenie.&nbsp;
+		Each FormFieldGenie instance has its own clipboard, and each clipboard can hold an “unlimited” number of clips
+		(limited by the machine).&nbsp;
+		You may copy, cut and paste into/from any clip.&nbsp;
+		The <code>.update_HTML_clipMenu()</code> method,
+		in conjunction with the <code>getClip()</code> method and the internal functioning of other methods,
+		recognizes the string pattern <code>"clip <var>num</var>"</code> (where <code><var>num</var></code> 
+		is a positive number) and this is the same as passing in a simple <var>number</var>;
+		e.g. <code>{clip:1}</code> is the same as <code>{clip:"clip 1"}</code>.&nbsp;
+		These “numbered” clips are stored internally in the <code>instance.clipboard.clips</code> array.&nbsp;
+		Every other string value you pass in for <code>clip</code> refers to a property of <code>instance.clipboard</code>;
+		the clipboard itself is an array, so oddly if you pass the <strong>string</strong> <code>"1"</code> 
+		like so: <code>{clip:"1"}</code> you will refer to <code>instance.clipboard[1]</code>
+		</dd>
+</dl>
+
+<p>Most of these options do not need much more explanation, especially if you study the demonstration example.&nbsp;
+A few do, so we will touch on them here.</p>
+
+<p>By using the <code>config.groupClass</code> and/or <code>config.groupTag</code> options,
+you may include other <abbr>DOM</abbr> Elements besides <code><var>group</var></code>s in your <code><var>batch</var></code>,
+including form-inputs or tags with form-inputs as children,
+that are not to be duplicated, automatically cleared, or otherwise messed-with by the Genie.</p>
+
+<p>When you want to use a plugin function to update names, you may write one that accepts
+a set of parameters, and then pass different parameters to your plugin for different form fields.&nbsp;
+There is an included plugin with the demonstration example and the downloadable source code that
+shows how this works.&nbsp;
+The supplied standard demo plugin can accept two different parameters (passed in the one object).&nbsp;
+You may create your own “order” and pass it through to this plugin, should you choose.&nbsp;
+If you understand Perl compatible regular expressions, and can understand how this simple plugin functions,
+then you could also pass a custom RegExp to the plugin and have even greater control over how it updates the name.&nbsp;
+We chose using the first index, because this works well with this plugin’s logic.&nbsp;
+Pay attention to the fact that the logic requires matching a <strong>single</strong> character,
+then the “incremental word” follows.&nbsp; Another example of a naming style that would work
+with this function’s logic is <code>name_first</code>&nbsp; <code>name_second</code>
+using the RegExp <code>/_([a-z]+)$/</code> or <code>name_first[]</code>&nbsp; using <code>/_([a-z]+)\[/</code></p>
+</main>
+
+<footer>
+<p>SoftMoon-WebWare and its websites do not use or store “cookies” or other data on your computer/device
+(except for application demos that require your intent to do so, to store “settings” and the data you generate and desire to save).&nbsp;
+No personal data is transferred to any other entity
+(except with your intent as previously stated while using “demos”,
+and said data is only transferred to SoftMoon-WebWare.com and is <em>not</em> saved).&nbsp;
+You are not being tracked, quantified, or mined for data when visiting our sites.&nbsp;
+We hope you enjoy the advertisement-free experience that shuns the growing worldwide corporate-fascism movement.</p>
+<p>All content found on this page &amp; site Copyright © 2010, 2012, 2013, 2015, 2022, 2023  by SoftMoon-WebWare and its owner,
+all rights reserved, unless otherwise specifically noted.&nbsp;
+Trademarks and Service-Marks are property of SoftMoon-WebWare and its owner,
+all rights reserved, unless otherwise specifically noted.</p>
+<p>
+<note>“JavaScript” is a trademark of Oracle Corporation.</note>
+</p>
+</footer>
+</body>
+</html>
