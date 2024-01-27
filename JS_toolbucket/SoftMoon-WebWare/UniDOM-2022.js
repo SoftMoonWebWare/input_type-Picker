@@ -1,23 +1,32 @@
 //  character-encoding: UTF-8 DOS   tab-spacing: 2   word-wrap: no   standard-line-length: 160   max-line-length: 2400
-/*  UniDOM-2022  version 1.3  October 12, 2023
+/*  UniDOM-2022  version 1.5.2  December 13, 2023
  *  copyright © 2013, 2014, 2015, 2018, 2019, 2020, 2022, 2023 Joe Golembieski, SoftMoon-WebWare
  *   except where otherwise noted
  *
  *  http://softmoon-webware.com/UniDOM_instructions.htm
 
-		This program is free software: you can redistribute it and/or modify
-		it under the terms of the GNU General Public License as published by
+		This program is licensed under the SoftMoon Humane Use License ONLY to “humane entities” that qualify under the terms of said license.
+		For qualified “humane entities”, this program is free software:
+		you can use it, redistribute it, and/or modify it
+		under the terms of the GNU General Public License as published by
 		the Free Software Foundation, either version 3 of the License, or
-		(at your option) any later version.
-		The original copyright information must remain intact.
+		(at your option) any later version, with the following additional requirements
+		ADDED BY THE ORIGINAL SOFTWARE CREATOR AND LICENSOR that supersede any possible GNU license definitions:
+		This original copyright and licensing information and requirements must remain intact at the top of the source-code.
 
 		This program is distributed in the hope that it will be useful,
 		but WITHOUT ANY WARRANTY; without even the implied warranty of
 		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 		GNU General Public License for more details.
 
-		You should have received a copy of the GNU General Public License
-		along with this program.  If not, see <http://www.gnu.org/licenses/>   */
+		You should have received a copy of:
+		 • the SoftMoon Humane Use License
+		and
+		 • the GNU General Public License
+		along with this program.  If not, see:
+			https://softmoon-webware.com/humane-use-license/
+			https://www.gnu.org/licenses/
+		*/
 
 
 /*  required support file:  JS_toolbucket/+++JS/+++.js
@@ -26,7 +35,7 @@
 	Object.lock
 	Object.prototype.has
 */
-
+'use strict';
 
 { //open UniDOM’s private namespace (to end of file)
 
@@ -94,33 +103,34 @@ if (typeof Element.prototype.querySelectorAll === 'function')
 	//private
 	function isArrayish(a) {return a instanceof Array || a instanceof HTMLCollection || a instanceof NodeList}
 	function arrayify(v) {return  (v instanceof Array) ? v : [v];}
-	function getEventType(eT) {return eT.toLowerCase().match( /^(?:on)?(.+)$/ )[1];}
+	function getEventType(eT) {return (eT instanceof String) ? eT.valueOf() : eT.toLowerCase().match( /^(?:on)?(.+)$/ )[1];}
 	const aSlice=Array.prototype.slice;
 
 	let handlerCounter=0, eventCounter=0;
 
 UniDOM.addEventHandler=addEventHandler;
-function addEventHandler(element, eventType, handler, useCapture)  {
+function addEventHandler(element, eventType, handler, options)  {
 	element=xElement(element);
 	if (isArrayish(element))  {
 		const allAdded=new Array;
 		for (const elmnt of element)  {
-			allAdded.push(addEventHandler(elmnt, eventType, handler, useCapture));  }
+			allAdded.push(addEventHandler(elmnt, eventType, handler, options));  }
 		return allAdded;  }
 	const
 		userArgs=aSlice.call(arguments, 4),
 		wrappers=new Array,
-		doWrap=useCapture?.doWrap;
-	eventType=arrayify(eventType);  handler=arrayify(handler);  useCapture=Boolean(typeof useCapture === 'object' ? useCapture.useCapture : useCapture);
+		once=options?.once,
+		doWrap=options?.doWrap;
+	eventType=arrayify(eventType);  handler=arrayify(handler);
 	for (let i=0; i<eventType.length; i++)  {
 		const etype=getEventType(eventType[i]);
-		if (UniDOM.getEventHandler(element, etype, handler, useCapture) !== false)  {
-			console.error('UniDOM will not double-bind event handlers.\n •Element: '+element+'\n •event type: '+etype+' with'+(useCapture ? "" : "out")+' capture\n •handler: '+handler);
+		if (UniDOM.getEventHandler(element, etype, handler, options) !== false)  {
+			console.error('UniDOM will not double-bind event handlers.\n •Element: '+element+'\n •event type: '+etype+' with'+(options ? "" : "out")+' options: ',options ? options : "",'\n •handler: '+handler);
 			if (UniDOM.addEventHandler.errorOnDoubleBind)
 				throw new Error('UniDOM will not double-bind event handlers.');
 			else  continue;  }
 		addingHandler=true;
-		if (doWrap  ||  handler.length>1  ||  userArgs.length>0
+		if (doWrap  ||  once  ||  handler.length>1  ||  userArgs.length>0
 		||  (typeof handler[0]['on'+etype] === 'function')
 		||  (typeof handler[0].handleEvent === 'function'))  {
 			wrappers[i]=function UniDOM_EventHandlerWrapper(event)  {
@@ -131,19 +141,25 @@ function addEventHandler(element, eventType, handler, useCapture)  {
 				for (let j=0;  event.doContinue && j<handler.length;  j++)  {
 					if (typeof handler[j]['on'+event.type] === 'function')  handler[j]['on'+event.type](...pass);
 					else if (typeof handler[j].handleEvent === 'function')  handler[j].handleEvent(...pass);
-					else  handler[j].apply(element, pass);  }  }
-			element.addEventListener(etype, wrappers[i], useCapture);
-			wrappers[eventType[i]]=new UniDOM.EventHandler(element, etype, handler, useCapture, wrappers[i], userArgs);  }
+					else  handler[j].apply(element, pass);
+					if (once)  {
+						const w=(element.ownerDocument  ||  element.document  ||  element).defaultView;  // ← (ElementNode || window || document)
+						getAllEventsInWindow(w, false);
+						delete allEvents[handler[j].id];
+						oncer=true;  handler[j].id=false;  oncer=false;
+						cleanWindow(w);  }  }  }
+			element.addEventListener(etype, wrappers[i], options);
+			wrappers[eventType[i]]=new UniDOM.EventHandler(element, etype, handler, options, wrappers[i], userArgs);  }
 		else  {
-			element.addEventListener(etype, handler[0], useCapture);
-			wrappers[eventType[i]]=new UniDOM.EventHandler(element, etype, handler[0], useCapture);  }  }
+			element.addEventListener(etype, handler[0], options);
+			wrappers[eventType[i]]=new UniDOM.EventHandler(element, etype, handler[0], options);  }  }
 
 	return wrappers;  }
 
 addEventHandler.errorOnDoubleBind=true;  // false quietly ignores double-binds
 
 	//private
-	let addingHandler=false,
+	let addingHandler=false, oncer=false,
 			allEvents;
 	const eventedWindows=new Array;
 
@@ -173,34 +189,35 @@ addEventHandler.errorOnDoubleBind=true;  // false quietly ignores double-binds
 // We want to allow → (myObject instanceof UniDOM.EventHandler)
 // but disallow false construction.
 UniDOM.EventHandler=EventHandler;
-function EventHandler(element, eventType, handler, useCapture, wrapper, userArgs)  {
+function EventHandler(element, eventType, handler, options, wrapper, userArgs)  {
 	if (!new.target)  throw new Error('UniDOM.EventHandler is a constructor, not a function');  // redundant because ↓
 	if (!addingHandler)  throw new Error('“UniDOM.EventHandler” Objects may only be created using UniDOM’s “addEventHandler”.');
 	addingHandler=false;
 	var id='h'+(handlerCounter++);
 	getAllEventsInWindow((element.ownerDocument  ||  element.document  ||  element).defaultView, true); // ← (ElementNode || window || document)
 	allEvents[id]=this;
-	this.id=id;
+	Object.defineProperty(this, 'id', {get: ()=>id, set: (_id)=>{if (removing && _id===false)  id=false}});
+	if (wrapper)  Object.defineProperty(wrapper, 'id', {get: ()=>id, set: (_id)=>{if (oncer && _id===false)  id=false}});
 	this.element=element;
 	this.eventType=eventType;
 	this.handler=handler;  // this is an Array and it may be modified; or a single basic handler with no user-arguments to pass
-	this.useCapture=useCapture;  /*    ♪ ♫ ♪ I’m a capturah; soul adventurah… … … ♫ ♪ ♫    */
+	this.options=options;  /*    ♪ ♫ ♪ I’m a capturah; soul adventurah… … … I’m a rebel; soul rebel… … … ♫ ♪ ♫  ¡But I’m not a Zionist!  I’m a soul lover.  */
 	this.wrapper=wrapper;  // the wrapper function; or “undefined” for a single basic handler with no user-arguments to pass
 	this.userArgs=userArgs;  // this is an Array and it may be modified; or it may be “undefined” for a single basic handler with no user-arguments to pass
 //	Object.freeze(this);  }
 	Object.lock(this);  }  // properties may not be modified, but new properties may be added by the user
 
+	//private
+	let removing=false;
+
 EventHandler.prototype.remove=function()  {
 	// since EventHandler objects are now frozen/locked (they could not be when UniDOM was created and JavaScript was young)
 	// there should be no way to throw Errors; but just in case…we leave the sanity checks.
-	if (!isElement(this.element)  &&  !isWindow(this.element))
-		throw new Error("Can not remove “UniDOM.EventHandler”: its “element reference” has been corrupted.");
 	const w=(this.element.ownerDocument  ||  this.element.document  ||  this.element).defaultView;  // ← (ElementNode || window || document)
 	getAllEventsInWindow(w, false);
-	if (allEvents[this.id] !== this)  throw new Error("Can not remove “UniDOM.EventHandler”: its “id” has been corrupted.");
-	this.element.removeEventListener(this.eventType, this.wrapper || this.handler, this.useCapture);
+	this.element.removeEventListener(this.eventType, this.wrapper || this.handler, this.options);
 	delete allEvents[this.id];
-	this.id=false;
+	removing=true;  this.id=false;  removing=false;
 	cleanWindow(w);  }
 
 
@@ -281,9 +298,11 @@ function generateEvent(element, eventType, eSpecs, userArgs)  {
 	for (let eT of eventType)  {
 		eT=getEventType(eT);
 		let
-			subT=eT.match( /wheel|mouse|click|key|focus|touch|resize|scroll|./ ),
+			subT=eT.match( /change|wheel|mouse|click|key|focus|touch|resize|scroll|./ ),
 			event;
 		switch (subT[0])  {
+			case 'change': event=new Event(eT, eSpecs);
+			break;
 			case 'wheel': event=new WheelEvent(eT, eSpecs);
 			break;
 			case 'mouse':
@@ -299,7 +318,7 @@ function generateEvent(element, eventType, eSpecs, userArgs)  {
 			case 'scroll': event=new UIEvent(eT, eSpecs);
 			break;
 			default: event=new CustomEvent(eT, eSpecs);  }
-		if (userArgs)  for (p in userArgs)  {event[p]=userArgs[p];}
+		if (userArgs)  for (const p in userArgs)  {event[p]=userArgs[p];}
 		element.dispatchEvent(event);  }  }
 
 UniDOM.triggerEvent=function triggerEvent(element, event)  {
@@ -331,7 +350,7 @@ function KeySniffer(key, shift, ctrl, alt, meta, graph, os, capsLock, numLock, s
 		this.numlock= arguments[2] ? arguments[0].getModifierState('NumLock') : undefined;
 		this.scrolllock= arguments[3] ? arguments[0].getModifierState('ScrollLock') : undefined;  }
 	else  {
-		this.key=key;  // ←this could be a numeric keycode for a specific key on the keyboard; or a string that represents more than one physical key
+		this.key=key;  // ←this could be a numeric keycode for a specific key on the keyboard; or a string that represents more than one physical key; or an Array of either preceding
 		this.shift=shift;
 		this.ctrl=ctrl;
 		this.alt=alt;
@@ -343,16 +362,17 @@ function KeySniffer(key, shift, ctrl, alt, meta, graph, os, capsLock, numLock, s
 		this.scrollLock=scrollLock;  }  }
 // returns true if the event’s key-press matches this KeySniffer’s key-combo-specs; returns false otherwise.
 KeySniffer.prototype.sniff=function sniffKeyEvent(event)  {
-	return (typeof this.key === 'number' ? event.keyCode : event.key) === this.key  &&
+	return (  (this.key instanceof Array  &&  (this.key.includes(event.key)  ||  this.key.includes(event.keyCode)))
+				 ||	(typeof this.key === 'number' ? event.keyCode : event.key) === this.key  )  &&
 					(this.shift===undefined || event.shiftKey===this.shift)  &&
 					(this.ctrl===undefined  || event.ctrlKey===this.ctrl)  &&
 					(this.alt===undefined   || event.altKey===this.alt)  &&
 					(this.meta===undefined  || event.metaKey===this.meta)  &&
 					(this.graph===undefined || event.getModifierState('AltGraph')===this.graph)  &&
 					(this.os===undefined    || event.getModifierState('OS')===this.os)  &&
-					(this.capsLock===undefined   || event.getModifierState('CapsLock')===this.os)  &&
-					(this.numLock===undefined    || event.getModifierState('NumLock')===this.os)  &&
-					(this.scrollLock===undefined || event.getModifierState('ScrollLock')===this.os);  }
+					(this.capsLock===undefined   || event.getModifierState('CapsLock')===this.capsLock)  &&
+					(this.numLock===undefined    || event.getModifierState('NumLock')===this.numLock)  &&
+					(this.scrollLock===undefined || event.getModifierState('ScrollLock')===this.scrollLock);  }
 
 
 
@@ -378,7 +398,7 @@ function getMouseOffset(element, event)  {  //returns an offset-values object; e
 UniDOM.getElementOffset=getElementOffset;
 function getElementOffset(element, scroll)  {
 										//  (element, ancestor)  ← alternate, find the offset from the ancestor
-	var x=0, y=0, scrl=false, fixed=false, ancestor=null;
+	var x=0, y=0, scrl=false, fixed=false, s, ancestor=null;
 	element=xElement(element);
 	if (typeof scroll === 'boolean')  scrl=scroll;
 	else if (isElement(arguments[1]))  ancestor=arguments[1];
@@ -386,7 +406,8 @@ function getElementOffset(element, scroll)  {
 	while (!fixed  &&  (s=getComputedStyle(element, null))
 			&&  element!==ancestor  &&  element.offsetParent)  {
 		if (s.position==='fixed')  {scrl=false;  fixed=true;}
-//								console.log("<"+element.nodeName+" id="+element.id+">  postion: "+s.position+";  offsetLeft: "+element.offsetLeft+";  offsetTop: "+element.offsetTop);
+//								console.log("<"+element.nodeName+" id='"+element.id+"'>  postion: "+s.position+";  offsetLeft: "+element.offsetLeft+";  offsetTop: "+element.offsetTop);
+//								console.log("<"+element.offsetParent.nodeName+" id='"+element.id+"'>  scrollLeft: "+element.offsetParent.scrollLeft+";  scrollTop: "+element.offsetParent.scrollTop);
 		x+= element.offsetLeft - (scrl? element.offsetParent.scrollLeft : 0);
 		y+= element.offsetTop - (scrl? element.offsetParent.scrollTop : 0);
 		element=element.offsetParent;  }
@@ -412,6 +433,9 @@ function isLast(e) {return (e instanceof Element)  &&   e===e.parentNode?.lastEl
 
 UniDOM.isLastNode=isLastNode;
 function isLastNode(e) {return (n instanceof Node)  &&   n===n.parentNode?.lastChild;}
+
+UniDOM.isDocument=isDocument;
+function isDocument(d)  {return  d instanceof Document;}
 
 UniDOM.isWindow=isWindow;
 function isWindow(w)  {return  w instanceof Window;}
