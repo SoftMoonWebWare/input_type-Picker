@@ -1,5 +1,7 @@
 //  character-encoding: UTF-8 Unix   tab-spacing: 2   word-wrap: no
-//  last updated April 12, 2023
+//  last updated April 7, 2014
+
+// public domain — curated/written by SoftMoon-WebWare
 
 if (RegExp.escape)  console.warn("RegExp.escape already exists.");
 else
@@ -59,22 +61,42 @@ else Number.parsePercent=function(s, em)  {
 	return s;  };
 
 
+if (Object.hasWithin)  console.warn("Object.hasWithin already exists.");
+else  Object.hasWithin=function ($O, $p)  {
+	if ($O.hasOwnProperty($p))  return true;
+	const props = Object.getOwnPropertyNames($O);
+	for (const p of props)  {if (Object.hasWithin($O[p], $p))  return true;}
+	return false;  }
 
-if (Object.lock)  console.warn("Object.lock already exists.");
-else  Object.lock=function(o, deep)  {
-	// ¡¡¡ this function is NOT INFINATELY-RECURSION PROOF !!!
-	// ¡¡¡ deep objects may not reference shallow objects !!!
+
+if (Object.deepFreeze)  console.warn("Object.deepFreeze already exists.");
+else  Object.deepFreeze=function deepFreeze($O, deep=true, cursed=[]) {
 	if (deep  &&  typeof deep !== 'number')  deep=Infinity;
-	const
-		props=Object.getOwnPropertyNames(o),
-		cycled=new Array;
-	for (const p of props)  {
-		if (deep  &&  typeof o[p] === 'object')  Object.lock(o[p], deep-1);
-		const d=Object.getOwnPropertyDescriptor(o, p);
+	if (deep)  {
+		cursed.push($O);
+		for (const p of Object.getOwnPropertyNames($O))  {
+			if ((typeof $O[p] === "function"  ||  (typeof $O[p] === "object"  &&  !($O[p] instanceof Window)))
+			&&  !cursed.includes($O[p]))
+				deepFreeze($O[p], deep-1, cursed);  }
+		cursed.pop();  }
+  return Object.freeze($O);  }
+
+// Existing properties can not be modified.
+// New properties may be added.
+if (Object.lock)  console.warn("Object.lock already exists.");
+else  Object.lock=function lock($O, deep, cursed=[])  {
+	if (deep  &&  typeof deep !== 'number')  deep=Infinity;
+	cursed.push($O);
+	for (const p of Object.getOwnPropertyNames($O))  {
+		if (deep  &&  (typeof $O[p] === "function"  ||  (typeof $O[p] === 'object'  &&  !($O[p] instanceof Window)))
+		&&  !cursed.includes($O[p]))
+			lock($O[p], deep-1, cursed);
+		const d=Object.getOwnPropertyDescriptor($O, p);
 		if (d.configurable)  {
 			d.configurable=false;
 			if ('writable' in d)  d.writable=false;
-			Object.defineProperty(o, p, d);  }  }  }
+			Object.defineProperty($O, p, d);  }  }
+	cursed.pop();  }
 
 
 if (Object.prototype.has)  console.warn("Object.prototype.has already exists.");
