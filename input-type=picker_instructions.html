@@ -83,7 +83,7 @@ main samp, code {
 	white-space: nowrap;
 	text-align: left;
 	font-size: .854076em;
-	font-family: "Consolas"; }
+	font-family: "Consolas", monospace; }
 p code {
   display: inline-block; }
 p code.block {
@@ -162,7 +162,7 @@ abbr[tm] {
 	font-size: .763924em;
 	vertical-align: .236076em;
 	line-height: 100%; }
-kbd span {
+kbd key {
 	display: inline-block;
 	position: static;
 	border: 1px solid #8080FF;
@@ -200,7 +200,6 @@ blockcaption {
 <figcaption>JavaScript<abbr tm>™</abbr>, <abbr>HTML 5</abbr>, <abbr>CSS 4</abbr>, &amp; <abbr>PHP 8</abbr>:
 <span>Innovative Enterprise level Scripting for interactive sites, <acronym title='software as a service'>SaaS</acronym>, &amp; cross-platform desktop apps</span></figcaption>
 </figure>
-<?php include "SoftMoon-WebWare_header_menu.php"; ?>
 <h1>JavaScript<abbr tm>™</abbr> powered <code>&lt;input type="picker"&gt;</code></h1>
 </header>
 
@@ -230,7 +229,7 @@ Specifically, <abbr title='Accessible Rich Internet Applications'>ARIA</abbr>
 <a href='https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/combobox_role' target="Mozilla">“combobox”</a> and
 <a href='https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-haspopup' target="Mozilla">“popup”</a>
 specifications are incorporated into the <code>Picker</code>’s framework.&nbsp;
-For picker pop-ups of role-type “dialog,” <a href='#tab_key'>integrated <kbd><span>Tab</span></kbd> key</a> support is also incorporated.&nbsp;
+For picker pop-ups of role-type “dialog,” <a href='#tab_key'>integrated <kbd><key>Tab</key></kbd> key</a> support is also incorporated.&nbsp;
 You can download the JavaScript<mark class='macronym'>™</mark> package from our <a href='OpenSource.php'>download page</a>
 or Git it from GitHub: <a href='https://github.com/SoftMoonWebWare/input_type_Picker' target='github'>input_type_Picker</a>.</p>
 </p>
@@ -460,15 +459,15 @@ there are 5 “types” of picker-interfaces:
 <nobr><code>menu</code>,</nobr> <nobr><code>list</code>,</nobr> <nobr><code>tree</code>,</nobr> <nobr><code>grid</code>,</nobr> and <code>dialog</code>.&nbsp;
 The “dialog” type indicates a complex interface, which the <code>Picker</code> class was designed for,
 including <a href='#multipanel'>multiple panels</a>, <a href='#interface_controls'>interface controls</a>,
-and <a href='#tab_key'><kbd><span>Tab</span></kbd> key control</a>.&nbsp;
+and <a href='#tab_key'><kbd><key>Tab</key></kbd> key control</a>.&nbsp;
 But <code>Picker</code>s may also embrace the other “types” which by definition
 do not typically embrace multiple panels or interface controls,
 and therefore also have no need for tab-key-control.&nbsp;
 <a href='https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-haspopup' target="Mozilla"><abbr>ARIA</abbr> “popup” specs</a>
 indicate that these other picker-types use a different set of keyboard keys
 to navigate the “pop-up options” (the arrow keys
-<nobr>(<kbd><span>↑</span></kbd></nobr> <kbd><span>↓</span></kbd> <kbd><span>←</span></kbd> <nobr><kbd><span>→</span></kbd>)</nobr> and others),
-and specifically <strong><em>not</em></strong> the <kbd><span>Tab</span></kbd> key that the <code>Picker</code> class uses
+<nobr>(<kbd><key>↑</key></kbd></nobr> <kbd><key>↓</key></kbd> <kbd><key>←</key></kbd> <nobr><kbd><key>→</key></kbd>)</nobr> and others),
+and specifically <strong><em>not</em></strong> the <kbd><key>Tab</key></kbd> key that the <code>Picker</code> class uses
 to navigate though <a href='#interface_controls'>“interface controls”</a>.&nbsp;
 If you implement a picker of type <nobr><code>menu</code>,</nobr> <nobr><code>list</code>,</nobr> <nobr><code>tree</code>,</nobr> or <code>grid</code>
 it will by definition typically not have interface controls and therefore no integrated tab-key-control.&nbsp;
@@ -494,7 +493,7 @@ The <code>Picker</code> was designed to be intrinsically
 <a href='https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-modal' target='Mozilla'>non-modal</a>
 and when your “data target” looses focus by the end-user
 clicking anywhere outside the Picker’s panels or outside of the “data target”
-or otherwise tabs-out (using the <kbd><span>Tab</span></kbd> key) of the “data target”,
+or otherwise tabs-out (using the <kbd><key>Tab</key></kbd> key) of the “data target”,
 the picker “pops down” (or “pops out”, or “ disappears ”, or otherwise simply becomes “inactive”,
 depending on <em>your</em> <abbr>CSS</abbr>).</p>
 
@@ -921,16 +920,17 @@ allowing another <code>&lt;input&gt;</code> (etc.) to become the <code>dataTarge
 It is up to you to supply any JavaScript<abbr tm>™</abbr> code to make the internals of
 your picker-panels work according to <abbr>ARIA</abbr> rules for menus, lists, trees, or grids.&nbsp;
 For <code>Picker</code>s with the <code>dialog</code> role,
-this class supports the <kbd><span>Tab</span></kbd> key natively
+this class supports the <kbd><key>Tab</key></kbd> key natively
 for your “interface controls” that reside on the picker-panel(s),
 and which integrates with the native “multi-panel” support by necessity:
 </p>
 
-<h3 id='tab_key'>The <kbd><span>Tab</span></kbd> key with “dialog” type Pickers</h3>
+<h3 id='tab_key'>The <kbd><key>Tab</key></kbd> key with “dialog” type Pickers</h3>
 <p>With version 2+ of the Picker Class, the non-standard <abbr>HTML</abbr> attributes
 “tabToTarget” (same as Version 1 release) and
 “backTabToTarget” may have values of <code>"true"</code> or <code>"false"</code>;
 these are “<a href='#Boolean'>Boolean¹</a>” attributes, and as such their simple inclusion without a value indicates a “true” value.&nbsp;
+These attributes are also “empowered” by JavaScript; see below.&nbsp;
 When registering an “interface panel” the first and last “interface controls” found on the panel
 by default are registered to backtab-to-target and tab-to-target, respectively.&nbsp;
 You can override this with the <abbr>HTML</abbr> attributes markup,
@@ -954,30 +954,65 @@ The <code>@</code> symbol may be used to signify one of several “special cases
 These are <code>@next-panel</code>, <code>@previous-panel</code>, <code>@adjacent-panel</code>, and <code>@target</code>.&nbsp;
 (see below for more about tabbing from one panel to another)&nbsp;
 For example: <code>&lt;input tabTo='@next-panel'&gt;</code>.&nbsp;
-The <code>@adjacent-panel</code> value relies on the <kbd><span>Shift</span></kbd> key being pressed to determine if the panel is the “next” or “previous” one.&nbsp;
+The <code>@adjacent-panel</code> value relies on the <kbd><key>Shift</key></kbd> key being pressed to determine if the panel is the “next” or “previous” one.&nbsp;
 If you only have two (2) panels, use this value.&nbsp;
 The <code>@target</code> value works like the <code>tabToTarget</code> and <code>backTabToTarget</code> attributes noted above,
-but it can not signify a <nobr>“<code>false</code>”</nobr> value like they can.&nbsp;
-The value of a <nobr>“tabTo”</nobr> or <nobr>“backtabTo”</nobr> attribute may also be a
-JavaScript<abbr tm>™</abbr> <em>expression</em> that evaluates to the Element to tab to.&nbsp;
-The value of <nobr>“<code>this</code>”</nobr> within the expression is the “interface control” element that has keyboard focus;
-you also have access within your expression to the values of the keydown <nobr>“<code>event</code>”</nobr>, the <nobr>“<code>PickerInstance</code>”</nobr>,
-and the <nobr>“<code>actions</code>”</nobr> Object that you passed in when you <a href='#interface_controls' up>registered the interface control</a>.&nbsp;
+but it can not signify a <nobr>“<code>false</code>”</nobr> value like they can.&nbsp;</p>
+
+<h4 id='empowered'>“empowering” your tab-control attributes with JavaScript</h4>
+<p>The value of a <nobr>“tabToTarget”</nobr>, <nobr>“backtabToTarget”</nobr>, <nobr>“tabTo”</nobr>  or <nobr>“backtabTo”</nobr>
+attribute may also be a JavaScript<abbr tm>™</abbr> <em>expression</em> or a complete JavaScript<abbr tm>™</abbr> snippet.&nbsp;
+For <nobr>“tabToTarget”</nobr> &amp; <nobr>“backtabToTarget”</nobr> attributes,
+the •expression should evaluate to, or •the snippet should return a JavaScript<abbr tm>™</abbr> Boolean value.&nbsp;
+For <nobr>“tabTo”</nobr> &amp; <nobr>“backtabTo”</nobr> attributes,
+the •expression should evaluate to, or •the snippet should return a JavaScript<abbr tm>™</abbr>
+<abbr title='Document-Object Model'>DOM</abbr> element that can receive keyboard focus, i.e. the Element to tab to.&nbsp;
+The value of <nobr>“<code>this</code>”</nobr> within the expression or snippet is the “interface control” element
+that has keyboard focus (i.e. the element with one of these attributes);
+you also have access within your expression or snippet to the values of the keydown <nobr>“<code>event</code>”</nobr>,
+the <nobr>“<code>PickerInstance</code>”</nobr>, and the <nobr>“<code>actions</code>”</nobr> Object
+that you passed in when you <a href='#interface_controls' up>registered the interface control</a>.&nbsp;
 For example: <code>&lt;input tabTo='this.closest(".panel").querySelector(<br>
 &nbsp;&nbsp;&nbsp;(event.shiftKey || actions.forceShiftKey) ^ PickerInstance.toggleShiftKeyAction ? ".coldButton" : ".hotButton")'&gt;</code></p>
+<h5>expressions vs. snippets</h5>
+<p>Generally speaking, specify an expression by enclosing it with parenthesis:
+<code>(this.closest("td").nextElementSibling.querySelector("input"))</code></p>
+<p>Always enclose snippets with curly-brackets:
+<code>{for (inp of this.closest("fieldset")) {if (inp.value===this.value) return inp;} return PickerInstance.dataTarget;}</code></p>
+<p>Since <nobr>“tabToTarget”</nobr> &amp; <nobr>“backtabToTarget”</nobr>
+are “<a href='#Boolean'>Boolean¹</a>” attributes that can recognize any number of Boolean values,
+JavaScript<abbr tm>™</abbr> expressions <strong>must</strong> be enclosed with <code>()</code> parenthesis;
+however, you may be lazy and omit the enclosing <code>()</code> parenthesis for
+<nobr>“tabTo”</nobr> &amp; <nobr>“backtabTo”</nobr> attributes.</p>
+
+<h3>Auto “tab-out” of <code>fieldset</code>s containing radio buttons:</h3>
+<p>Your user-interface pop-up picker may need a set of radio buttons as “interface controls”,
+along with a variety of other interface controls on a panel, etc., that you want to have
+the <code>Picker</code>’s tab key support to interface with, but you don’t want the user to be
+forced to tab through all the buttons.&nbsp;
+Typically, <abbr>Aria</abbr>-support requires that the arrow keys
+<kbd><key>↑</key> <key>↓</key> <key>←</key> <key>→</key></kbd>
+allow the user to navigate the group of radio buttons, while the <kbd><key>Tab</key></kbd> key
+is used to navigate in/out of the group from/to the previous/next tab-stop.&nbsp;
+The Picker <kbd><key>Tab</key></kbd> key support can easily be configured to that spec
+by including the “<a href='#Boolean'>Boolean¹</a>” attribute <code>autoTabOut</code>
+on a <code>&lt;fieldset&gt;</code> containing radio-buttons.&nbsp;
+Note that the <code>&lt;fieldset autoTabOut='true'&gt;</code> element may contain anything,
+but <strong>only</strong> <code>&lt;input type='radio'&gt;</code> elements will be
+tabbed out of the fieldset.</p>
 
 <p>Users may also want to manually tab from one panel to another.&nbsp;
-By default they could now do this using <kbd><span>CTRL</span>+<span>Tab</span></kbd>
-and <kbd><span>SHIFT</span>+<span>CTRL</span>+<span>Tab</span></kbd>
+By default they could now do this using <kbd><key>CTRL</key>+<key>Tab</key></kbd>
+and <kbd><key>SHIFT</key>+<key>CTRL</key>+<key>Tab</key></kbd>
 except for that most browsers block these key-combos from JavaScript<abbr tm>™</abbr>.&nbsp;
-So by default the Picker class <em>also</em> recognizes <kbd><span>CTRL</span>+<span>&lt;</span></kbd>
-and <kbd><span>CTRL</span>+<span>&gt;</span></kbd>
+So by default the Picker class <em>also</em> recognizes <kbd><key>CTRL</key>+<key>&lt;</key></kbd>
+and <kbd><key>CTRL</key>+<key>&gt;</key></kbd>
 (on <acronym>QUERTY</acronym> keyboards this would actually be
-<kbd><span>SHIFT</span>+<span>CTRL</span>+<span>,&lt;</span></kbd> and
-<kbd><span>SHIFT</span>+<span>CTRL</span>+<span>.&gt;</span></kbd>)
+<kbd><key>SHIFT</key>+<key>CTRL</key>+<key>,&lt;</key></kbd> and
+<kbd><key>SHIFT</key>+<key>CTRL</key>+<key>.&gt;</key></kbd>)
 to serve this need.&nbsp;
-On non-<acronym>QUERTY</acronym> keyboards, the <kbd><span>&lt;</span></kbd> and <kbd><span>&gt;</span></kbd> keys
-may normally generate characters when pressed in combo with the <kbd><span>CTRL</span></kbd> key,
+On non-<acronym>QUERTY</acronym> keyboards, the <kbd><key>&lt;</key></kbd> and <kbd><key>&gt;</key></kbd> keys
+may normally generate characters when pressed in combo with the <kbd><key>CTRL</key></kbd> key,
 and the Picker’s default panel-tab control may then conflict (and not work!).&nbsp;
 You may alter the values found in:
 <code><var>pickerInstance</var>.panelTabKey</code> and <code><var>pickerInstance</var>.panelBacktabKey</code>
@@ -987,7 +1022,7 @@ A value of <code>true</code> or <code>false</code> for a modifier-key means that
 A value of <code>undefined</code> for a modifier-key means the KeySniffer doesn’t care.</p>
 
 <p>You may want your “interface control” to remain focused when it has focus
-when the user presses the <kbd><span>&crarr;Enter</span></kbd> key;
+when the user presses the <kbd><key>&crarr;Enter</key></kbd> key;
 or maybe you want keyboard focus to return to your data-target (<code>&lt;input&gt;</code>).&nbsp;
 The Boolean value found at <code><var>pickerInstance</var>.doKeepInterfaceFocus</code>
 controls that default action;
@@ -996,7 +1031,7 @@ and this may have a <a href='#Boolean'>Boolean¹</a> value that overrides the <c
 For <abbr>HTML</abbr> <code>&lt;button&gt;</code> “interface controls”
 the Picker also adds a customized <code>buttonpress</code> event
 when the <code>&lt;button&gt;</code> has keyboard focus
-and the user presses the <kbd><span>&crarr;Enter</span></kbd> key.</p>
+and the user presses the <kbd><key>&crarr;Enter</key></kbd> key.</p>
 
 <h4>notes</h4>
 <dl>
